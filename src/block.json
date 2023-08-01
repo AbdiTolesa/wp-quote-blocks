@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "create-block/wp-quote-blocks",
+	"version": "0.1.0",
+	"title": "Wp Quote Blocks",
+	"category": "widgets",
+	"icon": "format-quote",
+	"description": "Collection of a load of Quote styles.",
+	"attributes": {
+		"align": {
+			"type": "string",
+			"default": "left"
+		},
+		"class": {
+			"type": "string",
+			"default": "default"
+		}
+	},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "wp-quote-blocks",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}
