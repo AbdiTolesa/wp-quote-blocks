@@ -10,7 +10,9 @@ import {
     useInnerBlocksProps,
     store as blockEditorStore,
     __experimentalBlockVariationPicker as BlockVariationPicker,
-    InnerBlocks,
+    AlignmentControl,
+	RichText,
+	BlockControls
 } from '@wordpress/block-editor';
 
 import { useDispatch, useSelect } from '@wordpress/data';
@@ -40,13 +42,14 @@ export default function Edit( props ) {
     ];
 
 	const { clientId } = props;
-    const hasInnerBlocks = useSelect(
-        ( select ) =>
-            select( blockEditorStore ).getBlocks( clientId ).length > 0,
-        [ clientId ]
-    );
+    // const hasInnerBlocks = useSelect(
+    //     ( select ) =>
+    //         select( blockEditorStore ).getBlocks( clientId ).length > 0,
+    //     [ clientId ]
+    // );
 
-    const Component = hasInnerBlocks
+	const isVariationSelected = attributes.class !== '';
+    const Component = isVariationSelected
         ? EditContainer // display the inner blocks
         : Placeholder;  // or the variation picker
 
@@ -74,27 +77,34 @@ function Placeholder( { clientId, setAttributes } ) {
                     if ( variation.attributes ) {
                         setAttributes( variation.attributes );
                     }
-                    if ( variation.innerBlocks ) {
+                    if ( false && variation.innerBlocks ) {
+						const blocks = [
+							<RichText
+							placeholder={
+								// translators: placeholder text used for the quote
+								__( 'Add quote' )
+							} />
+						];
                         replaceInnerBlocks(
                             clientId,
-                            createBlocksFromInnerBlocksTemplate(
-                                variation.innerBlocks
-                            ),
+							createBlocksFromInnerBlocksTemplate( blocks ),
+                            // createBlocksFromInnerBlocksTemplate(
+                            //     variation.innerBlocks
+                            // ),
                             true
                         );
                     }
                 } }
-                // allowSkip
             />
         </div>
     );
 }
 
 function EditContainer( props ) {
-	const { attributes } = props;
+	const { attributes, setAttributes } = props;
     const blockProps = useBlockProps();
     const innerBlocksProps = useInnerBlocksProps( blockProps, {
-        // allowedBlocks: ["core/image"],
+        allowedBlocks: ["core/image"],
         orientation: 'horizontal',
         renderAppender: false,
     } );
@@ -102,7 +112,32 @@ function EditContainer( props ) {
     return (
 		<div className={`quote-variation-${attributes.class}`}>
 			<span className="dashicons dashicons-format-quote"></span>
-			<div { ...innerBlocksProps } />
+			<BlockControls group="block">
+				<AlignmentControl
+					value={ attributes.textAlign }
+					onChange={ ( nextAlign ) => {
+						setAttributes( { textAlign: nextAlign } );
+					} }
+				/>
+			</BlockControls>
+
+			<RichText
+                { ...blockProps }
+                tagName="p" // The tag here is the element output and editable in the admin
+                value={ attributes.quote } // Any existing content, either from the database or an attribute default
+                allowedFormats={ [ 'core/bold', 'core/italic' ] } // Allow the content to be made bold or italic, but do not allow other formatting options
+                onChange={ ( quote ) => setAttributes( { quote } ) } // Store updated content as a block attribute
+                placeholder={ __( 'Add quote...' ) } // Display this text before any content has been added by the user
+            />
+			<RichText
+                { ...blockProps }
+                tagName="p" // The tag here is the element output and editable in the admin
+                value={ attributes.citation } // Any existing content, either from the database or an attribute default
+                allowedFormats={ [ 'core/bold', 'core/italic' ] } // Allow the content to be made bold or italic, but do not allow other formatting options
+                onChange={ ( citation ) => setAttributes( { citation } ) } // Store updated content as a block attribute
+                placeholder={ __( 'Add citation...' ) } // Display this text before any content has been added by the user
+				textAlign="center"
+            />
 		</div>
 	);
 }

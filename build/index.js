@@ -53,8 +53,14 @@ function Edit(props) {
   const {
     clientId
   } = props;
-  const hasInnerBlocks = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_4__.useSelect)(select => select(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.store).getBlocks(clientId).length > 0, [clientId]);
-  const Component = hasInnerBlocks ? EditContainer // display the inner blocks
+  // const hasInnerBlocks = useSelect(
+  //     ( select ) =>
+  //         select( blockEditorStore ).getBlocks( clientId ).length > 0,
+  //     [ clientId ]
+  // );
+
+  const isVariationSelected = attributes.class !== '';
+  const Component = isVariationSelected ? EditContainer // display the inner blocks
   : Placeholder; // or the variation picker
 
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Component, {
@@ -85,21 +91,18 @@ function Placeholder({
       if (variation.attributes) {
         setAttributes(variation.attributes);
       }
-      if (variation.innerBlocks) {
-        replaceInnerBlocks(clientId, (0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_2__.createBlocksFromInnerBlocksTemplate)(variation.innerBlocks), true);
-      }
+      if (false) {}
     }
-    // allowSkip
   }));
 }
-
 function EditContainer(props) {
   const {
-    attributes
+    attributes,
+    setAttributes
   } = props;
   const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.useBlockProps)();
   const innerBlocksProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.useInnerBlocksProps)(blockProps, {
-    // allowedBlocks: ["core/image"],
+    allowedBlocks: ["core/image"],
     orientation: 'horizontal',
     renderAppender: false
   });
@@ -107,8 +110,43 @@ function EditContainer(props) {
     className: `quote-variation-${attributes.class}`
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "dashicons dashicons-format-quote"
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    ...innerBlocksProps
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.BlockControls, {
+    group: "block"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.AlignmentControl, {
+    value: attributes.textAlign,
+    onChange: nextAlign => {
+      setAttributes({
+        textAlign: nextAlign
+      });
+    }
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.RichText, {
+    ...blockProps,
+    tagName: "p" // The tag here is the element output and editable in the admin
+    ,
+    value: attributes.quote // Any existing content, either from the database or an attribute default
+    ,
+    allowedFormats: ['core/bold', 'core/italic'] // Allow the content to be made bold or italic, but do not allow other formatting options
+    ,
+    onChange: quote => setAttributes({
+      quote
+    }) // Store updated content as a block attribute
+    ,
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Add quote...') // Display this text before any content has been added by the user
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.RichText, {
+    ...blockProps,
+    tagName: "p" // The tag here is the element output and editable in the admin
+    ,
+    value: attributes.citation // Any existing content, either from the database or an attribute default
+    ,
+    allowedFormats: ['core/bold', 'core/italic'] // Allow the content to be made bold or italic, but do not allow other formatting options
+    ,
+    onChange: citation => setAttributes({
+      citation
+    }) // Store updated content as a block attribute
+    ,
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Add citation...') // Display this text before any content has been added by the user
+    ,
+    textAlign: "center"
   }));
 }
 
@@ -215,13 +253,22 @@ function save(props) {
   const {
     attributes
   } = props;
+  const blockProps = _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save();
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save({
       className: `quote-variation-${attributes.class}`
     })
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     class: "dashicons dashicons-format-quote"
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(InnerBlocks.Content, null));
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText.Content, {
+    ...blockProps,
+    tagName: "p",
+    value: attributes.quote
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText.Content, {
+    ...blockProps,
+    tagName: "p",
+    value: attributes.citation
+  }));
 }
 
 /***/ }),
@@ -339,7 +386,7 @@ module.exports = window["wp"]["i18n"];
   \************************/
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/wp-quote-blocks","version":"0.1.0","title":"Wp Quote Blocks","category":"widgets","icon":"format-quote","description":"Collection of a load of Quote styles.","attributes":{"align":{"type":"string","default":"left"},"class":{"type":"string","default":"default"}},"supports":{"html":false},"textdomain":"wp-quote-blocks","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css"}');
+module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/wp-quote-blocks","version":"0.1.0","title":"WP Quote Blocks","category":"widgets","icon":"format-quote","description":"Collection of a load of Quote styles.","attributes":{"align":{"type":"string","default":"left"},"class":{"type":"string","default":""},"quote":{"type":"string","default":""},"citation":{"type":"string","default":""}},"supports":{"html":false},"textdomain":"wp-quote-blocks","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css"}');
 
 /***/ })
 

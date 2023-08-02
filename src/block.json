@@ -3,7 +3,7 @@
 	"apiVersion": 3,
 	"name": "create-block/wp-quote-blocks",
 	"version": "0.1.0",
-	"title": "Wp Quote Blocks",
+	"title": "WP Quote Blocks",
 	"category": "widgets",
 	"icon": "format-quote",
 	"description": "Collection of a load of Quote styles.",
@@ -14,7 +14,15 @@
 		},
 		"class": {
 			"type": "string",
-			"default": "default"
+			"default": ""
+		},
+		"quote": {
+			"type": "string",
+			"default": ""
+		},
+		"citation": {
+			"type": "string",
+			"default": ""
 		}
 	},
 	"supports": {

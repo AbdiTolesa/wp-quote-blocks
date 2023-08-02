@@ -4,7 +4,7 @@
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps } from '@wordpress/block-editor';
+import { useBlockProps, RichText } from '@wordpress/block-editor';
 
 /**
  * The save function defines the way in which the different attributes should
@@ -17,10 +17,12 @@ import { useBlockProps } from '@wordpress/block-editor';
  */
 export default function save( props ) {
 	const { attributes } = props;
+	const blockProps = useBlockProps.save();
 	return (
         <div { ...useBlockProps.save( { className: `quote-variation-${attributes.class}`} ) }>
 			<span class="dashicons dashicons-format-quote"></span>
-            <InnerBlocks.Content />
+			<RichText.Content { ...blockProps } tagName="p" value={ attributes.quote } />
+			<RichText.Content { ...blockProps } tagName="p" value={ attributes.citation } />
         </div>
 	);
 	
