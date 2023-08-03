@@ -20,7 +20,7 @@ export default function save( props ) {
 	const blockProps = useBlockProps.save();
 	return (
         <div { ...useBlockProps.save( { className: `quote-variation-${attributes.class}`} ) }>
-			<span class="dashicons dashicons-format-quote"></span>
+			<div class="quote-icon"><span class="dashicons dashicons-format-quote"></span></div>
 			<RichText.Content { ...blockProps } tagName="p" value={ attributes.quote } />
 			<RichText.Content { ...blockProps } tagName="p" value={ attributes.citation } />
         </div>

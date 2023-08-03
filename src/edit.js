@@ -110,34 +110,32 @@ function EditContainer( props ) {
     } );
 
     return (
-		<div className={`quote-variation-${attributes.class}`}>
-			<span className="dashicons dashicons-format-quote"></span>
-			<BlockControls group="block">
-				<AlignmentControl
-					value={ attributes.textAlign }
-					onChange={ ( nextAlign ) => {
-						setAttributes( { textAlign: nextAlign } );
-					} }
-				/>
-			</BlockControls>
+		<>
+			<div {...blockProps} className={`quote-variation-${attributes.class}`}>
+				{/* <BlockControls>
+					<AlignmentControl
+						value={ attributes.textAlign }
+						onChange={ ( nextAlign ) => {
+							setAttributes( { textAlign: nextAlign } );
+						} }
+					/>
+				</BlockControls> */}
+				<div class="quote-icon"><span class="dashicons dashicons-format-quote"></span></div>
 
-			<RichText
-                { ...blockProps }
-                tagName="p" // The tag here is the element output and editable in the admin
-                value={ attributes.quote } // Any existing content, either from the database or an attribute default
-                allowedFormats={ [ 'core/bold', 'core/italic' ] } // Allow the content to be made bold or italic, but do not allow other formatting options
-                onChange={ ( quote ) => setAttributes( { quote } ) } // Store updated content as a block attribute
-                placeholder={ __( 'Add quote...' ) } // Display this text before any content has been added by the user
-            />
-			<RichText
-                { ...blockProps }
-                tagName="p" // The tag here is the element output and editable in the admin
-                value={ attributes.citation } // Any existing content, either from the database or an attribute default
-                allowedFormats={ [ 'core/bold', 'core/italic' ] } // Allow the content to be made bold or italic, but do not allow other formatting options
-                onChange={ ( citation ) => setAttributes( { citation } ) } // Store updated content as a block attribute
-                placeholder={ __( 'Add citation...' ) } // Display this text before any content has been added by the user
-				textAlign="center"
-            />
-		</div>
+				<RichText
+					tagName="p" // The tag here is the element output and editable in the admin
+					value={ attributes.quote } // Any existing content, either from the database or an attribute default
+					onChange={ ( quote ) => setAttributes( { quote } ) } // Store updated content as a block attribute
+					placeholder={ __( 'Add quote...' ) } // Display this text before any content has been added by the user
+				/>
+				<RichText
+					tagName="p" // The tag here is the element output and editable in the admin
+					value={ attributes.citation } // Any existing content, either from the database or an attribute default
+					onChange={ ( citation ) => setAttributes( { citation } ) } // Store updated content as a block attribute
+					placeholder={ __( 'Add citation...' ) } // Display this text before any content has been added by the user
+					textAlign="center"
+				/>
+			</div>
+		</>
 	);
 }
