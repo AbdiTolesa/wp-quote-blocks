@@ -24,13 +24,30 @@ export default function save( props ) {
 	} = attributes;
 
 	const iconStyles = {
-		fontSize: iconSize,
-		color:    iconColor,
+		width: iconSize,
+		height: iconSize,
+		fill: iconColor,
 	};
+
+	const svgElementFromString = ( str ) => {
+		const div = document.createElement('DIV');
+		div.innerHTML = str;
+		const svg = div.querySelector('svg');
+
+		if (!svg) {
+		  throw Error('<svg> tag not found');
+		}
+	
+		return svg;
+	}
 
 	return (
         <div {...blockProps} { ...useBlockProps.save( { className: `quote-variation-${attributes.class}` } ) }>
-			<div className={ `quote-icon ${blockProps.className}` }><span { ...useBlockProps.save( { style: iconStyles } ) } className="dashicons dashicons-format-quote"></span></div>
+			<div className="quote-icon">
+				<span>
+					<svg xlmns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" { ...useBlockProps.save( { style: iconStyles } ) } dangerouslySetInnerHTML={{__html: svgElementFromString( attributes.icon ).innerHTML}} />
+				</span>
+			</div>
 			<RichText.Content { ...blockProps } tagName="p" value={ attributes.quote } />
 			<RichText.Content { ...blockProps } tagName="p" value={ attributes.citation } />
         </div>

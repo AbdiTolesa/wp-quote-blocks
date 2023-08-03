@@ -123,8 +123,9 @@ function EditContainer( props ) {
 	};
 
 	const iconStyles = {
-		fontSize: iconSize,
-		color: iconColor,
+		width: iconSize,
+		height: iconSize,
+		fill: iconColor,
 	};
 
 	const onChangeIconColor = ( val ) => {
@@ -154,11 +155,10 @@ function EditContainer( props ) {
 	];
 
 	const svgElementFromString = ( str ) => {
-		console.log(str);
 		const div = document.createElement('DIV');
 		div.innerHTML = str;
 		const svg = div.querySelector('svg');
-		console.log(svg);
+
 		if (!svg) {
 		  throw Error('<svg> tag not found');
 		}
@@ -203,7 +203,11 @@ function EditContainer( props ) {
 
 			</InspectorControls>
 			<div {...blockProps} className={`quote-variation-${attributes.class}`}>
-				<div className="quote-icon"><span { ...useBlockProps( { style: iconStyles } ) } className="dashicons dashicons-format-quote"></span></div>
+				<div className="quote-icon">
+					<span>
+						<svg xlmns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" { ...useBlockProps( { style: iconStyles } ) } dangerouslySetInnerHTML={{__html: svgElementFromString( attributes.icon ).innerHTML}} />
+					</span>
+				</div>
 				<RichText
 					tagName="p"
 					value={ attributes.quote }
