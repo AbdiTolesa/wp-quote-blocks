@@ -19,16 +19,18 @@ export default function save( props ) {
 	const { attributes } = props;
 	const blockProps = useBlockProps.save();
 	const {
-		iconSize
+		iconSize,
+		iconColor,
 	} = attributes;
 
 	const iconStyles = {
-		'--quote-icon-font-size': iconSize
+		fontSize: iconSize,
+		color:    iconColor,
 	};
 
 	return (
         <div {...blockProps} { ...useBlockProps.save( { className: `quote-variation-${attributes.class}` } ) }>
-			<div { ...useBlockProps.save( { style: iconStyles } ) } className={ `quote-icon ${blockProps.className}` }><span className="dashicons dashicons-format-quote"></span></div>
+			<div className={ `quote-icon ${blockProps.className}` }><span { ...useBlockProps.save( { style: iconStyles } ) } className="dashicons dashicons-format-quote"></span></div>
 			<RichText.Content { ...blockProps } tagName="p" value={ attributes.quote } />
 			<RichText.Content { ...blockProps } tagName="p" value={ attributes.citation } />
         </div>

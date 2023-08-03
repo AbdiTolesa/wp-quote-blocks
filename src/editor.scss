@@ -1,0 +1,14 @@
+.quote-icons > button {
+    display: inline-block;
+}
+
+.quote-icons {
+    display: flex;
+    flex-direction: row;
+    row-gap: 10px;
+}
+
+.quote-icons button svg {
+    width: 25px;
+    height: 25px;
+}
