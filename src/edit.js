@@ -12,12 +12,16 @@ import {
     __experimentalBlockVariationPicker as BlockVariationPicker,
     AlignmentControl,
 	RichText,
-	BlockControls
+	BlockControls,
+	InspectorControls,
+    PanelColorSettings,
 } from '@wordpress/block-editor';
 
 import { useDispatch, useSelect } from '@wordpress/data';
 
 import './editor.scss';
+
+import { PanelBody, RangeControl, SelectControl } from '@wordpress/components';
 
 import variations from './variations';
 
@@ -57,11 +61,6 @@ export default function Edit( props ) {
 }
 
 function Placeholder( { clientId, setAttributes } ) {
-    // Always set a default variation, particularly if allowing skipping the variation picker.
-    // const defaultVariation = variations[0];
-    // Or do something like this, which selects the variation having "isDefault: true":
-//  const defaultVariation = variations.filter( item => item.isDefault )[0] || variations[0];
-
     const { replaceInnerBlocks } = useDispatch( blockEditorStore );
     const blockProps = useBlockProps();
 
@@ -109,30 +108,45 @@ function EditContainer( props ) {
         renderAppender: false,
     } );
 
+	const {
+		iconSize
+	} = attributes;
+
+	const onChangeIconSize = ( val ) => {
+		setAttributes( { iconSize: val + 'px' } );
+	};
+
+	const iconStyles = {
+		'--quote-icon-font-size': iconSize
+	};
+
     return (
 		<>
+		    <InspectorControls>
+                <PanelBody title={ __( 'Icon Settings', 'wp-quote-blocks' ) }>
+                    <RangeControl
+                        label={ __( 'Icon size', 'wp-quote-blocks' ) }
+                        value={ parseInt( iconSize ) }
+                        onChange={ onChangeIconSize }
+                        min={ 1 }
+                        max={ 100 }
+                    />
+				</PanelBody>
+			</InspectorControls>
 			<div {...blockProps} className={`quote-variation-${attributes.class}`}>
-				{/* <BlockControls>
-					<AlignmentControl
-						value={ attributes.textAlign }
-						onChange={ ( nextAlign ) => {
-							setAttributes( { textAlign: nextAlign } );
-						} }
-					/>
-				</BlockControls> */}
-				<div class="quote-icon"><span class="dashicons dashicons-format-quote"></span></div>
+				<div { ...useBlockProps( { style: iconStyles } ) } className="quote-icon"><span className="dashicons dashicons-format-quote"></span></div>
 
 				<RichText
-					tagName="p" // The tag here is the element output and editable in the admin
-					value={ attributes.quote } // Any existing content, either from the database or an attribute default
-					onChange={ ( quote ) => setAttributes( { quote } ) } // Store updated content as a block attribute
-					placeholder={ __( 'Add quote...' ) } // Display this text before any content has been added by the user
+					tagName="p"
+					value={ attributes.quote }
+					onChange={ ( quote ) => setAttributes( { quote } ) }
+					placeholder={ __( 'Add quote...' ) }
 				/>
 				<RichText
-					tagName="p" // The tag here is the element output and editable in the admin
-					value={ attributes.citation } // Any existing content, either from the database or an attribute default
-					onChange={ ( citation ) => setAttributes( { citation } ) } // Store updated content as a block attribute
-					placeholder={ __( 'Add citation...' ) } // Display this text before any content has been added by the user
+					tagName="p"
+					value={ attributes.citation }
+					onChange={ ( citation ) => setAttributes( { citation } ) }
+					placeholder={ __( 'Add citation...' ) }
 					textAlign="center"
 				/>
 			</div>

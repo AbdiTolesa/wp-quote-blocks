@@ -23,6 +23,10 @@
     "citation": {
       "type": "string",
       "default": ""
+    },
+    "iconSize": {
+      "type": "string",
+      "default": "10px"
     }
   },
   "supports": {
