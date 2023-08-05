@@ -19,6 +19,13 @@ const variations = [
         attributes: {
             class: 'centred',
         }
+    },
+    {
+        name: 'closed',
+        title: 'Closed',
+        attributes: {
+            class: 'closed',
+        }
     }
 ];
 
