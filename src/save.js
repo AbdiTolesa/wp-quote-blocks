@@ -17,6 +17,7 @@ import { useBlockProps, RichText } from '@wordpress/block-editor';
  */
 export default function save( props ) {
 	const { attributes } = props;
+	let rightIcon;
 	const blockProps = useBlockProps.save();
 	const {
 		iconSize,
@@ -41,22 +42,22 @@ export default function save( props ) {
 		return svg;
 	}
 
+	if ( attributes.class.includes( 'closed' ) ) {
+		rightIcon = (
+			<div className="quote-icon">
+				<svg xlmns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" { ...useBlockProps.save( { style: { ...iconStyles, transform: 'rotate(180deg)' }  } ) } dangerouslySetInnerHTML={{__html: svgElementFromString( attributes.icon ).innerHTML}} />
+			</div>
+		);
+	}
+
 	return (
         <div {...blockProps} { ...useBlockProps.save( { className: `quote-variation-${attributes.class}` } ) }>
 			<div className="quote-icon">
-				<span>
-					<svg xlmns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" { ...useBlockProps.save( { style: iconStyles } ) } dangerouslySetInnerHTML={{__html: svgElementFromString( attributes.icon ).innerHTML}} />
-				</span>
+				<svg xlmns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" { ...useBlockProps.save( { style: iconStyles } ) } dangerouslySetInnerHTML={{__html: svgElementFromString( attributes.icon ).innerHTML}} />
 			</div>
 			<RichText.Content { ...blockProps } { ...useBlockProps.save( { style: { textAlign: attributes.alignment } } ) } tagName="p" className="quote" value={ attributes.quote } />
 			<RichText.Content { ...blockProps } { ...useBlockProps.save( { style: { textAlign: attributes.alignment } } ) } tagName="p" className="citation" value={ attributes.citation } />
-			{ attributes.class.includes( 'closed' ) && (
-					<div className="quote-icon">
-						<span>
-							<svg xlmns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" { ...useBlockProps.save( { style: { ...iconStyles, transform: 'rotate(180deg)' }  } ) } dangerouslySetInnerHTML={{__html: svgElementFromString( attributes.icon ).innerHTML}} />
-						</span>
-					</div>
-				)}
+			{ rightIcon }
         </div>
 	);
 	

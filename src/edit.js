@@ -227,7 +227,7 @@ function EditContainer( props ) {
                         />
                     </BlockControls>
                 }
-				<div { ...useBlockProps( { style: { position: 'absolute', left: '0' } } ) }></div>
+
 				<div className="quote-icon">
 					<svg xlmns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" { ...useBlockProps( { style: iconStyles } ) } dangerouslySetInnerHTML={{__html: svgElementFromString( attributes.icon ).innerHTML}} />
 				</div>
