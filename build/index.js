@@ -203,7 +203,7 @@ function EditContainer(props) {
     colorSettings: colorSettingsDropDown
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ...blockProps,
-    className: `quote-variation-${attributes.class}`
+    className: `wp-quote-blocks quote-variation-${attributes.class}`
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "quote-icon"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("svg", {
@@ -217,6 +217,7 @@ function EditContainer(props) {
     }
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.RichText, {
     tagName: "p",
+    className: "quote",
     value: attributes.quote,
     onChange: quote => setAttributes({
       quote
@@ -224,6 +225,7 @@ function EditContainer(props) {
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Add quote...')
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.RichText, {
     tagName: "p",
+    className: "citation",
     value: attributes.citation,
     onChange: citation => setAttributes({
       citation
@@ -279,24 +281,25 @@ __webpack_require__.r(__webpack_exports__);
   save: _save__WEBPACK_IMPORTED_MODULE_4__["default"],
   variations: _variations__WEBPACK_IMPORTED_MODULE_6__["default"]
 });
-(0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__.registerBlockVariation)('create-block/wp-quote-blocks', {
-  name: 'newsletter',
-  title: 'Newsletter',
-  attributes: {
-    "templateLock": "all",
-    "allowedBlocks": ["core/image"]
-  },
-  templateLock: "all",
-  allowedBlocks: ["core/image"],
-  innerBlocks: [['core/image', {
-    content: 'Subscribe to our Newsletter',
-    allowedBlocks: 'core/image'
-  }], ['core/paragraph', {
-    content: 'Get a 10% discount on your first order.'
-  }], ['core/button', {
-    text: 'Subscribe'
-  }]]
-});
+
+// registerBlockVariation(
+// 	'create-block/wp-quote-blocks',
+// 	{
+// 		name: 'newsletter',
+// 		title: 'Newsletter',
+// 		attributes: {
+// 			"templateLock": "all",
+// 			"allowedBlocks": [ "core/image" ],
+// 		},
+// 		templateLock: "all",
+// 		allowedBlocks: [ "core/image" ],
+// 		innerBlocks: [
+// 			[ 'core/image', { content: 'Subscribe to our Newsletter', allowedBlocks: 'core/image' } ],
+// 			[ 'core/paragraph', { content: 'Get a 10% discount on your first order.' } ],
+// 			[ 'core/button', { text: 'Subscribe' } ],
+// 		]
+// 	}
+// );
 
 /***/ }),
 
@@ -374,10 +377,12 @@ function save(props) {
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText.Content, {
     ...blockProps,
     tagName: "p",
+    className: "quote",
     value: attributes.quote
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText.Content, {
     ...blockProps,
     tagName: "p",
+    className: "citation",
     value: attributes.citation
   }));
 }
@@ -397,20 +402,20 @@ __webpack_require__.r(__webpack_exports__);
 const variations = [{
   name: 'default',
   title: 'Default',
-  innerBlocks: [["core/paragraph"]],
-  templateLock: 'all',
   attributes: {
-    align: 'left',
     class: 'default'
   }
 }, {
   name: 'simple',
   title: 'Simple',
-  innerBlocks: [["core/paragraph"], ["core/paragraph"]],
-  templateLock: 'all',
   attributes: {
-    align: 'top',
     class: 'simple'
+  }
+}, {
+  name: 'centred',
+  title: 'Centered',
+  attributes: {
+    class: 'centred'
   }
 }];
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (variations);

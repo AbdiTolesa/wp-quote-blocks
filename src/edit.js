@@ -202,7 +202,7 @@ function EditContainer( props ) {
                 ></PanelColorSettings>
 
 			</InspectorControls>
-			<div {...blockProps} className={`quote-variation-${attributes.class}`}>
+			<div {...blockProps} className={`wp-quote-blocks quote-variation-${attributes.class}`}>
 				<div className="quote-icon">
 					<span>
 						<svg xlmns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" { ...useBlockProps( { style: iconStyles } ) } dangerouslySetInnerHTML={{__html: svgElementFromString( attributes.icon ).innerHTML}} />
@@ -210,12 +210,14 @@ function EditContainer( props ) {
 				</div>
 				<RichText
 					tagName="p"
+					className="quote"
 					value={ attributes.quote }
 					onChange={ ( quote ) => setAttributes( { quote } ) }
 					placeholder={ __( 'Add quote...' ) }
 				/>
 				<RichText
 					tagName="p"
+					className="citation"
 					value={ attributes.citation }
 					onChange={ ( citation ) => setAttributes( { citation } ) }
 					placeholder={ __( 'Add citation...' ) }

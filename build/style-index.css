@@ -15,4 +15,24 @@
   text-align: center;
 }
 
+.quote-variation-centred {
+  position: relative;
+}
+
+.quote-variation-centred .quote-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  opacity: 0.2;
+  transform: translate(-50%, -50%);
+}
+
+.wp-block-create-block-wp-quote-blocks .citation, .wp-quote-blocks .citation {
+  margin-bottom: 0;
+}
+.wp-block-create-block-wp-quote-blocks .quote, .wp-block-create-block-wp-quote-blocks .citation, .wp-quote-blocks .quote, .wp-quote-blocks .citation {
+  position: relative;
+  z-index: 1;
+}
+
 /*# sourceMappingURL=style-index.css.map*/

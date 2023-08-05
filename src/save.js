@@ -48,8 +48,8 @@ export default function save( props ) {
 					<svg xlmns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" { ...useBlockProps.save( { style: iconStyles } ) } dangerouslySetInnerHTML={{__html: svgElementFromString( attributes.icon ).innerHTML}} />
 				</span>
 			</div>
-			<RichText.Content { ...blockProps } tagName="p" value={ attributes.quote } />
-			<RichText.Content { ...blockProps } tagName="p" value={ attributes.citation } />
+			<RichText.Content { ...blockProps } tagName="p" className="quote" value={ attributes.quote } />
+			<RichText.Content { ...blockProps } tagName="p" className="citation" value={ attributes.citation } />
         </div>
 	);
 	

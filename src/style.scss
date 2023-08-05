@@ -13,6 +13,24 @@
 	text-align: center;
 }
 
-// .quote-icon .dashicons {
-// 	font-size: var(--quote-icon-font-size);
-// }
+.quote-variation-centred {
+	position: relative;
+}
+
+.quote-variation-centred .quote-icon {
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    opacity: 0.2;
+    transform: translate(-50%,-50%);
+}
+
+.wp-block-create-block-wp-quote-blocks, .wp-quote-blocks {
+	.citation {
+		margin-bottom: 0;
+	}
+	.quote, .citation {
+		position: relative;
+		z-index: 1;
+	}
+}
