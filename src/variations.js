@@ -26,6 +26,13 @@ const variations = [
         attributes: {
             class: 'closed',
         }
+    },
+    {
+        name: 'block-quotation',
+        title: 'Block quotation',
+        attributes: {
+            class: 'block-quotation',
+        }
     }
 ];
 

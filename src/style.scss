@@ -32,5 +32,22 @@
 	.quote, .citation {
 		position: relative;
 		z-index: 1;
+		margin: 0;
 	}
+	.citation {
+		margin-top: 0.75rem;
+	}
+}
+
+.quote-variation-block-quotation {
+	display: flex;
+}
+
+.quote-variation-block-quotation .quote-icon {
+	padding-right: 1em;
+}
+
+.quote-variation-closed .quote-right-icon {
+	display: flex;
+	justify-content: flex-end;
 }

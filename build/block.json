@@ -39,10 +39,26 @@
     "alignment": {
       "type": "string",
       "default": ""
+    },
+    "quoteFontSize": {
+      "type": "string",
+      "default": "1rem"
+    },
+    "citationFontSize": {
+      "type": "string",
+      "default": "0.75rem"
     }
   },
   "supports": {
-    "html": false
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "typography": {
+      "fontSize": true,
+      "lineHeight": true
+    }
   },
   "textdomain": "wp-quote-blocks",
   "editorScript": "file:./index.js",

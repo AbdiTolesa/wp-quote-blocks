@@ -44,7 +44,7 @@ export default function save( props ) {
 
 	if ( attributes.class.includes( 'closed' ) ) {
 		rightIcon = (
-			<div className="quote-icon">
+			<div className="quote-icon quote-right-icon">
 				<svg xlmns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" { ...useBlockProps.save( { style: { ...iconStyles, transform: 'rotate(180deg)' }  } ) } dangerouslySetInnerHTML={{__html: svgElementFromString( attributes.icon ).innerHTML}} />
 			</div>
 		);
@@ -55,8 +55,10 @@ export default function save( props ) {
 			<div className="quote-icon">
 				<svg xlmns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" { ...useBlockProps.save( { style: iconStyles } ) } dangerouslySetInnerHTML={{__html: svgElementFromString( attributes.icon ).innerHTML}} />
 			</div>
-			<RichText.Content { ...blockProps } { ...useBlockProps.save( { style: { textAlign: attributes.alignment } } ) } tagName="p" className="quote" value={ attributes.quote } />
-			<RichText.Content { ...blockProps } { ...useBlockProps.save( { style: { textAlign: attributes.alignment } } ) } tagName="p" className="citation" value={ attributes.citation } />
+			<div className="quote-wrapper">
+				<RichText.Content { ...blockProps } { ...useBlockProps.save( { style: { textAlign: attributes.alignment, fontSize: attributes.quoteFontSize } } ) } tagName="p" className="quote" value={ attributes.quote } />
+				<RichText.Content { ...blockProps } { ...useBlockProps.save( { style: { textAlign: attributes.alignment, fontSize: attributes.citationFontSize } } ) } tagName="p" className="citation" value={ attributes.citation } />
+			</div>
 			{ rightIcon }
         </div>
 	);

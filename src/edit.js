@@ -25,6 +25,10 @@ import './editor.scss';
 import { PanelBody, RangeControl, Button, ButtonGroup, __experimentalRadio as Radio, __experimentalRadioGroup as RadioGroup,
     __experimentalToggleGroupControl as ToggleGroupControl,
     __experimentalToggleGroupControlOption as ToggleGroupControlOption,
+	__experimentalBoxControl as BoxControl,
+    __experimentalToolsPanel as ToolsPanel,
+    __experimentalToolsPanelItem as ToolsPanelItem,
+    __experimentalUnitControl as UnitControl,
 } from '@wordpress/components';
 
 import { useState } from '@wordpress/element';
@@ -177,10 +181,22 @@ function EditContainer( props ) {
 
 	if ( attributes.class.includes( 'closed' ) ) {
 		right_icon = (
-			<div className="quote-icon">
+			<div className="quote-icon quote-right-icon">
 				<svg xlmns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" { ...useBlockProps( { style: { ...iconStyles, transform: 'rotate(180deg)' }  } ) } dangerouslySetInnerHTML={{__html: svgElementFromString( attributes.icon ).innerHTML}} />
 			</div>
 		);
+	}
+
+	const onChangeQuoteFontSize = ( val ) => {
+		setAttributes( { quoteFontSize: val } );
+	}
+
+	const onChangeCitationFontSize = ( val ) => {
+		setAttributes( { citationFontSize: val } );
+	}
+
+	const resetFontSizes = () => {
+		setAttributes( { quoteFontSize: '1rem', citationFontSize: '0.75rem' } );
 	}
 
     return (
@@ -217,6 +233,30 @@ function EditContainer( props ) {
                     initialOpen={ false }
 					colorSettings={ colorSettingsDropDown }
                 ></PanelColorSettings>
+				<ToolsPanel label={ __( 'Typography' ) }>
+					<ToolsPanelItem
+						hasValue={ () => !! attributes.quoteFontSize || !! attributes.citationFontSize }
+						label={ __( 'Font sizes' ) }
+						onDeselect={ () => resetFontSizes() }
+					>
+						<PanelBody title={ __( 'Font sizes', 'wp-quote-blocks' ) }>
+							<ToggleGroupControl label="quote font size" value={attributes.quoteFontSize} onChange={ onChangeQuoteFontSize } isBlock>
+								<ToggleGroupControlOption value="0.75rem" label="S" />
+								<ToggleGroupControlOption value="1rem" label="M" />
+								<ToggleGroupControlOption value="1.5rem" label="L" />
+								<ToggleGroupControlOption value="2rem" label="XL" />
+								<ToggleGroupControlOption value="2.5rem" label="XXL" />
+							</ToggleGroupControl>
+							<ToggleGroupControl label="citation font size" value={attributes.citationFontSize} onChange={ onChangeCitationFontSize } isBlock>
+								<ToggleGroupControlOption value="0.75rem" label="S" />
+								<ToggleGroupControlOption value="1rem" label="M" />
+								<ToggleGroupControlOption value="1.5rem" label="L" />
+								<ToggleGroupControlOption value="2rem" label="XL" />
+								<ToggleGroupControlOption value="2.5rem" label="XXL" />
+							</ToggleGroupControl>
+						</PanelBody>
+					</ToolsPanelItem>
+				</ToolsPanel>
 			</InspectorControls>
 			<div {...blockProps} className={`wp-quote-blocks quote-variation-${attributes.class}`}>
 				{
@@ -231,23 +271,25 @@ function EditContainer( props ) {
 				<div className="quote-icon">
 					<svg xlmns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" { ...useBlockProps( { style: iconStyles } ) } dangerouslySetInnerHTML={{__html: svgElementFromString( attributes.icon ).innerHTML}} />
 				</div>
-				<RichText
-					tagName="p"
-					className="quote"
-					style={ { textAlign: attributes.alignment } }
-					value={ attributes.quote }
-					onChange={ ( quote ) => setAttributes( { quote } ) }
-					placeholder={ __( 'Add quote...' ) }
-				/>
-				<RichText
-					tagName="p"
-					className="citation"
-					style={ { textAlign: attributes.alignment } }
-					value={ attributes.citation }
-					onChange={ ( citation ) => setAttributes( { citation } ) }
-					placeholder={ __( 'Add citation...' ) }
-					textAlign="center"
-				/>
+				<div className="quote-wrapper">
+					<RichText
+						tagName="p"
+						className="quote"
+						style={ { textAlign: attributes.alignment, fontSize: attributes.quoteFontSize } }
+						value={ attributes.quote }
+						onChange={ ( quote ) => setAttributes( { quote } ) }
+						placeholder={ __( 'Add quote...' ) }
+					/>
+					<RichText
+						tagName="p"
+						className="citation"
+						style={ { textAlign: attributes.alignment, fontSize: attributes.citationFontSize } }
+						value={ attributes.citation }
+						onChange={ ( citation ) => setAttributes( { citation } ) }
+						placeholder={ __( 'Add citation...' ) }
+						textAlign="center"
+					/>
+				</div>
 				{ right_icon }
 			</div>
 		</>
