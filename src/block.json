@@ -32,6 +32,10 @@
 			"type": "string",
 			"default": "#000000"
 		},
+		"backgroundColor": {
+			"type": "string",
+			"default": "#ffffff"
+		},
 		"icon": {
 			"type": "string",
 			"default": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><path d=\"M10.3 24.8V26H20v16.9H0V26.2C0 13.4 6.6 7.1 19.9 7.1v7.1c-3.4.5-5.9 1.6-7.4 3.3-1.5 1.7-2.2 4.1-2.2 7.3zm30 0V26H50v16.9H30.1V26.2c0-12.7 6.6-19.1 19.9-19.1v7.1c-6.4.7-9.7 4.3-9.7 10.6z\"></path></svg>"

@@ -22,6 +22,7 @@ export default function save( props ) {
 	const {
 		iconSize,
 		iconColor,
+		backgroundColor,
 	} = attributes;
 
 	const iconStyles = {
@@ -51,7 +52,7 @@ export default function save( props ) {
 	}
 
 	return (
-        <div {...blockProps} { ...useBlockProps.save( { className: `quote-variation-${attributes.class}` } ) }>
+        <div {...blockProps} { ...useBlockProps.save( { className: `quote-variation-${attributes.class}` } ) } { ...useBlockProps.save( { style: { backgroundColor } } ) }>
 			<div className="quote-icon">
 				<svg xlmns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" { ...useBlockProps.save( { style: iconStyles } ) } dangerouslySetInnerHTML={{__html: svgElementFromString( attributes.icon ).innerHTML}} />
 			</div>

@@ -52,4 +52,9 @@
   justify-content: flex-end;
 }
 
+.wp-quote-icons__options button svg {
+  width: 24px;
+  height: 24px;
+}
+
 /*# sourceMappingURL=style-index.css.map*/

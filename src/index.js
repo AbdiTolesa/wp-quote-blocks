@@ -29,22 +29,3 @@ registerBlockType( metadata.name, {
 	save,
 	variations,
 } );
-
-// registerBlockVariation(
-// 	'create-block/wp-quote-blocks',
-// 	{
-// 		name: 'newsletter',
-// 		title: 'Newsletter',
-// 		attributes: {
-// 			"templateLock": "all",
-// 			"allowedBlocks": [ "core/image" ],
-// 		},
-// 		templateLock: "all",
-// 		allowedBlocks: [ "core/image" ],
-// 		innerBlocks: [
-// 			[ 'core/image', { content: 'Subscribe to our Newsletter', allowedBlocks: 'core/image' } ],
-// 			[ 'core/paragraph', { content: 'Get a 10% discount on your first order.' } ],
-// 			[ 'core/button', { text: 'Subscribe' } ],
-// 		]
-// 	}
-// );

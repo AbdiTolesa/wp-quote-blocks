@@ -21,9 +21,9 @@
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
 function create_block_wp_quote_blocks_block_init() {
-	register_block_type( __DIR__ . '/build', array(
-	) );
+	register_block_type( __DIR__ . '/build' );
 }
+
 add_action( 'init', 'create_block_wp_quote_blocks_block_init' );
 
 function wp_quote_blocks_custom_script() {
