@@ -21,16 +21,26 @@
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
 function create_block_wp_quote_blocks_block_init() {
-	register_block_type( __DIR__ . '/build' );
+	register_block_type( __DIR__ . '/build', array(
+	) );
 }
 add_action( 'init', 'create_block_wp_quote_blocks_block_init' );
 
-// function prefix_editor_assets() {
-// 	wp_enqueue_script(
-// 		'prefix-block-variations',
-// 		plugin_dir_url( __FILE__ ) . '/assets/js/block-variations.js',
-// 		array( 'wp-blocks' )
-// 	);
-// }
-
-// add_action( 'enqueue_block_editor_assets', 'prefix_editor_assets' );
+function wp_quote_blocks_custom_script() {
+	global $post;
+    $blocks = parse_blocks( $post->post_content );
+	$blocks = wp_list_filter( $blocks, array( 'blockName' => 'create-block/wp-quote-blocks' ) );
+	foreach( $blocks as $block ) { //var_dump( $block['attrs'] ); die;?>
+		
+		<script type="text/javascript">
+			document.addEventListener("DOMContentLoaded", () => {
+				if ( "" !== "<?php echo $block['attrs']['fontFamily'] ?>" ) {
+					var url = `https://fonts.googleapis.com/css?family=<?php echo $block['attrs']['fontFamily']; ?>`;
+					document.body.insertAdjacentHTML( 'beforebegin', `<link rel='stylesheet' id='google-fonts-css'  href='${url}' type='text/css' media='all' />`);
+				}
+			});
+		</script>
+		<?php
+	}
+}
+add_action('wp_enqueue_scripts', 'wp_quote_blocks_custom_script');

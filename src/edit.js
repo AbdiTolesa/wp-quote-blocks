@@ -22,7 +22,7 @@ import { useDispatch, useSelect } from '@wordpress/data';
 
 import './editor.scss';
 
-import { PanelBody, RangeControl, Button, ButtonGroup, __experimentalRadio as Radio, __experimentalRadioGroup as RadioGroup,
+import { PanelBody, SelectControl, RangeControl, Button, ButtonGroup, __experimentalRadio as Radio, __experimentalRadioGroup as RadioGroup,
     __experimentalToggleGroupControl as ToggleGroupControl,
     __experimentalToggleGroupControlOption as ToggleGroupControlOption,
 	__experimentalBoxControl as BoxControl,
@@ -46,21 +46,6 @@ import variations from './variations';
 export default function Edit( props ) {
 
 	const { attributes, setAttributes } = props;
-
-    const ALLOWED_BLOCKS = [ 'core/paragraph' ];
-    const TEMPLATE_PARAGRAPHS = [
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin finibus, lectus non interdum cursus, arcu sapien mollis lacus, et tincidunt odio nisi ut purus. Duis eleifend, magna placerat faucibus tincidunt, orci nulla ornare tortor, eget egestas tortor nunc quis sem. Cras in tortor justo. Nulla consectetur leo vel blandit consectetur.',
-    ];
-    const MC_TEMPLATE = [
-        [ 'core/paragraph', { placeholder: TEMPLATE_PARAGRAPHS[ 0 ] } ],
-    ];
-
-	const { clientId } = props;
-    // const hasInnerBlocks = useSelect(
-    //     ( select ) =>
-    //         select( blockEditorStore ).getBlocks( clientId ).length > 0,
-    //     [ clientId ]
-    // );
 
 	const isVariationSelected = attributes.class !== '';
     const Component = isVariationSelected
@@ -189,16 +174,59 @@ function EditContainer( props ) {
 
 	const onChangeQuoteFontSize = ( val ) => {
 		setAttributes( { quoteFontSize: val } );
-	}
+	};
 
 	const onChangeCitationFontSize = ( val ) => {
 		setAttributes( { citationFontSize: val } );
-	}
+	};
 
 	const resetFontSizes = () => {
 		setAttributes( { quoteFontSize: '1rem', citationFontSize: '0.75rem' } );
+	};
+
+	const fetchGoogleFonts = async () => {
+		const KEY = 'AIzaSyBE3Q6dX73OWOiG4IatUgNBHur6BYxIXE0';
+		const url = `https://www.googleapis.com/webfonts/v1/webfonts?key=${KEY}`;
+		const response = await fetch( url );
+		const fonts = await response.json();
+
+		return fonts;
+	};
+
+	const [ fontOptions, setFontOptions ] = useState('');
+
+	const getFontOptions = () => {
+		if ( fontOptions ) {
+			return;
+		}
+		let options = [];
+		fetchGoogleFonts().then( ( fonts ) => {
+			fonts.items.forEach( font => {
+				options.push( { label: font.family, value: font.family } );
+			});
+			setFontOptions( options );
+					// return options;
+		});
+
+	};
+
+	const onChangeFontFamily = ( newFont ) => {
+		setAttributes( { fontFamily: newFont } );
+		loadFontCss( newFont );
+	};
+
+	const loadFontCss = async ( font ) => {
+		const linkId = font.replace(/ /g, '+');
+		if ( ! font || document.getElementById( `google-font-${linkId}` ) ) {
+			return;
+		}
+		const url = `https://fonts.googleapis.com/css?family=${font}`;
+		document.body.insertAdjacentHTML( 'beforebegin', `<link rel='stylesheet' id="google-font-${linkId}" href='${url}' type='text/css' media='all' />`);
 	}
 
+	loadFontCss( attributes.fontFamily );
+
+	getFontOptions();
     return (
 		<>
 		    <InspectorControls>
@@ -256,6 +284,21 @@ function EditContainer( props ) {
 							</ToggleGroupControl>
 						</PanelBody>
 					</ToolsPanelItem>
+					<ToolsPanelItem
+						hasValue={ () => true }
+						label={ __( 'Font family' ) }
+						onDeselect={ () => resetFontSizes() }
+					>
+						<PanelBody title={ __( 'Font family', 'wp-quote-blocks' ) }>
+							<SelectControl
+								label="Select font"
+								value={ attributes.fontFamily }
+								options={ fontOptions }
+								onChange={ ( newFont ) => onChangeFontFamily( newFont ) }
+								__nextHasNoMarginBottom
+							/>
+						</PanelBody>
+					</ToolsPanelItem>
 				</ToolsPanel>
 			</InspectorControls>
 			<div {...blockProps} className={`wp-quote-blocks quote-variation-${attributes.class}`}>
@@ -275,7 +318,7 @@ function EditContainer( props ) {
 					<RichText
 						tagName="p"
 						className="quote"
-						style={ { textAlign: attributes.alignment, fontSize: attributes.quoteFontSize } }
+						style={ { textAlign: attributes.alignment, fontSize: attributes.quoteFontSize, fontFamily: attributes.fontFamily } }
 						value={ attributes.quote }
 						onChange={ ( quote ) => setAttributes( { quote } ) }
 						placeholder={ __( 'Add quote...' ) }
@@ -283,7 +326,7 @@ function EditContainer( props ) {
 					<RichText
 						tagName="p"
 						className="citation"
-						style={ { textAlign: attributes.alignment, fontSize: attributes.citationFontSize } }
+						style={ { textAlign: attributes.alignment, fontSize: attributes.citationFontSize, fontFamily: attributes.fontFamily } }
 						value={ attributes.citation }
 						onChange={ ( citation ) => setAttributes( { citation } ) }
 						placeholder={ __( 'Add citation...' ) }

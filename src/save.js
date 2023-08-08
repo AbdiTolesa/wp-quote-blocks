@@ -56,8 +56,8 @@ export default function save( props ) {
 				<svg xlmns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" { ...useBlockProps.save( { style: iconStyles } ) } dangerouslySetInnerHTML={{__html: svgElementFromString( attributes.icon ).innerHTML}} />
 			</div>
 			<div className="quote-wrapper">
-				<RichText.Content { ...blockProps } { ...useBlockProps.save( { style: { textAlign: attributes.alignment, fontSize: attributes.quoteFontSize } } ) } tagName="p" className="quote" value={ attributes.quote } />
-				<RichText.Content { ...blockProps } { ...useBlockProps.save( { style: { textAlign: attributes.alignment, fontSize: attributes.citationFontSize } } ) } tagName="p" className="citation" value={ attributes.citation } />
+				<RichText.Content { ...blockProps } { ...useBlockProps.save( { style: { textAlign: attributes.alignment, fontSize: attributes.quoteFontSize, fontFamily: attributes.fontFamily  } } ) } tagName="p" className="quote" value={ attributes.quote } />
+				<RichText.Content { ...blockProps } { ...useBlockProps.save( { style: { textAlign: attributes.alignment, fontSize: attributes.citationFontSize, fontFamily: attributes.fontFamily } } ) } tagName="p" className="citation" value={ attributes.citation } />
 			</div>
 			{ rightIcon }
         </div>

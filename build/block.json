@@ -47,6 +47,10 @@
     "citationFontSize": {
       "type": "string",
       "default": "0.75rem"
+    },
+    "fontFamily": {
+      "type": "string",
+      "default": ""
     }
   },
   "supports": {
@@ -56,7 +60,6 @@
       "full"
     ],
     "typography": {
-      "fontSize": true,
       "lineHeight": true
     }
   },

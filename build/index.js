@@ -49,20 +49,6 @@ function Edit(props) {
     attributes,
     setAttributes
   } = props;
-  const ALLOWED_BLOCKS = ['core/paragraph'];
-  const TEMPLATE_PARAGRAPHS = ['Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin finibus, lectus non interdum cursus, arcu sapien mollis lacus, et tincidunt odio nisi ut purus. Duis eleifend, magna placerat faucibus tincidunt, orci nulla ornare tortor, eget egestas tortor nunc quis sem. Cras in tortor justo. Nulla consectetur leo vel blandit consectetur.'];
-  const MC_TEMPLATE = [['core/paragraph', {
-    placeholder: TEMPLATE_PARAGRAPHS[0]
-  }]];
-  const {
-    clientId
-  } = props;
-  // const hasInnerBlocks = useSelect(
-  //     ( select ) =>
-  //         select( blockEditorStore ).getBlocks( clientId ).length > 0,
-  //     [ clientId ]
-  // );
-
   const isVariationSelected = attributes.class !== '';
   const Component = isVariationSelected ? EditContainer // display the inner blocks
   : Placeholder; // or the variation picker
@@ -185,6 +171,47 @@ function EditContainer(props) {
       citationFontSize: '0.75rem'
     });
   };
+  const fetchGoogleFonts = async () => {
+    const KEY = 'AIzaSyBE3Q6dX73OWOiG4IatUgNBHur6BYxIXE0';
+    const url = `https://www.googleapis.com/webfonts/v1/webfonts?key=${KEY}`;
+    const response = await fetch(url);
+    const fonts = await response.json();
+    return fonts;
+  };
+  const [fontOptions, setFontOptions] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const getFontOptions = () => {
+    if (fontOptions) {
+      return;
+    }
+    let options = [];
+    fetchGoogleFonts().then(fonts => {
+      fonts.items.forEach(font => {
+        options.push({
+          label: font.family,
+          value: font.family
+        });
+      });
+      setFontOptions(options);
+      // return options;
+    });
+  };
+
+  const onChangeFontFamily = newFont => {
+    setAttributes({
+      fontFamily: newFont
+    });
+    loadFontCss(newFont);
+  };
+  const loadFontCss = async font => {
+    const linkId = font.replace(/ /g, '+');
+    if (!font || document.getElementById(`google-font-${linkId}`)) {
+      return;
+    }
+    const url = `https://fonts.googleapis.com/css?family=${font}`;
+    document.body.insertAdjacentHTML('beforebegin', `<link rel='stylesheet' id="google-font-${linkId}" href='${url}' type='text/css' media='all' />`);
+  };
+  loadFontCss(attributes.fontFamily);
+  getFontOptions();
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.InspectorControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.PanelBody, {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Icon Settings', 'wp-quote-blocks')
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.RangeControl, {
@@ -288,7 +315,19 @@ function EditContainer(props) {
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.__experimentalToggleGroupControlOption, {
     value: "2.5rem",
     label: "XXL"
-  })))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.__experimentalToolsPanelItem, {
+    hasValue: () => true,
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Font family'),
+    onDeselect: () => resetFontSizes()
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.PanelBody, {
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Font family', 'wp-quote-blocks')
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.SelectControl, {
+    label: "Select font",
+    value: attributes.fontFamily,
+    options: fontOptions,
+    onChange: newFont => onChangeFontFamily(newFont),
+    __nextHasNoMarginBottom: true
+  }))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ...blockProps,
     className: `wp-quote-blocks quote-variation-${attributes.class}`
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.BlockControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.AlignmentToolbar, {
@@ -312,7 +351,8 @@ function EditContainer(props) {
     className: "quote",
     style: {
       textAlign: attributes.alignment,
-      fontSize: attributes.quoteFontSize
+      fontSize: attributes.quoteFontSize,
+      fontFamily: attributes.fontFamily
     },
     value: attributes.quote,
     onChange: quote => setAttributes({
@@ -324,7 +364,8 @@ function EditContainer(props) {
     className: "citation",
     style: {
       textAlign: attributes.alignment,
-      fontSize: attributes.citationFontSize
+      fontSize: attributes.citationFontSize,
+      fontFamily: attributes.fontFamily
     },
     value: attributes.citation,
     onChange: citation => setAttributes({
@@ -499,7 +540,8 @@ function save(props) {
     ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save({
       style: {
         textAlign: attributes.alignment,
-        fontSize: attributes.quoteFontSize
+        fontSize: attributes.quoteFontSize,
+        fontFamily: attributes.fontFamily
       }
     }),
     tagName: "p",
@@ -510,7 +552,8 @@ function save(props) {
     ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save({
       style: {
         textAlign: attributes.alignment,
-        fontSize: attributes.citationFontSize
+        fontSize: attributes.citationFontSize,
+        fontFamily: attributes.fontFamily
       }
     }),
     tagName: "p",
@@ -656,7 +699,7 @@ module.exports = window["wp"]["i18n"];
   \************************/
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/wp-quote-blocks","version":"0.1.0","title":"WP Quote Blocks","category":"widgets","icon":"format-quote","description":"Collection of a load of Quote styles.","attributes":{"align":{"type":"string","default":"left"},"class":{"type":"string","default":""},"quote":{"type":"string","default":""},"citation":{"type":"string","default":""},"iconSize":{"type":"string","default":"30px"},"iconColor":{"type":"string","default":"#000000"},"icon":{"type":"string","default":"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 50 50\\"><path d=\\"M10.3 24.8V26H20v16.9H0V26.2C0 13.4 6.6 7.1 19.9 7.1v7.1c-3.4.5-5.9 1.6-7.4 3.3-1.5 1.7-2.2 4.1-2.2 7.3zm30 0V26H50v16.9H30.1V26.2c0-12.7 6.6-19.1 19.9-19.1v7.1c-6.4.7-9.7 4.3-9.7 10.6z\\"></path></svg>"},"alignment":{"type":"string","default":""},"quoteFontSize":{"type":"string","default":"1rem"},"citationFontSize":{"type":"string","default":"0.75rem"}},"supports":{"html":false,"align":["wide","full"],"typography":{"fontSize":true,"lineHeight":true}},"textdomain":"wp-quote-blocks","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css"}');
+module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/wp-quote-blocks","version":"0.1.0","title":"WP Quote Blocks","category":"widgets","icon":"format-quote","description":"Collection of a load of Quote styles.","attributes":{"align":{"type":"string","default":"left"},"class":{"type":"string","default":""},"quote":{"type":"string","default":""},"citation":{"type":"string","default":""},"iconSize":{"type":"string","default":"30px"},"iconColor":{"type":"string","default":"#000000"},"icon":{"type":"string","default":"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 50 50\\"><path d=\\"M10.3 24.8V26H20v16.9H0V26.2C0 13.4 6.6 7.1 19.9 7.1v7.1c-3.4.5-5.9 1.6-7.4 3.3-1.5 1.7-2.2 4.1-2.2 7.3zm30 0V26H50v16.9H30.1V26.2c0-12.7 6.6-19.1 19.9-19.1v7.1c-6.4.7-9.7 4.3-9.7 10.6z\\"></path></svg>"},"alignment":{"type":"string","default":""},"quoteFontSize":{"type":"string","default":"1rem"},"citationFontSize":{"type":"string","default":"0.75rem"},"fontFamily":{"type":"string","default":""}},"supports":{"html":false,"align":["wide","full"],"typography":{"lineHeight":true}},"textdomain":"wp-quote-blocks","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css"}');
 
 /***/ })
 
