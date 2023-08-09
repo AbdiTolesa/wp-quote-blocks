@@ -104,6 +104,7 @@ function EditContainer( props ) {
 		iconSize,
 		iconColor,
 		backgroundColor,
+		boxShadow,
 	} = attributes;
 
 	const onChangeIconSize = ( size ) => {
@@ -136,14 +137,6 @@ function EditContainer( props ) {
 			label: __( 'Backgroundcolor', 'wp-quote-blocks' ),
 		}
 	];
-    const [ checked, setChecked ] = useState( '25' );
-
-	const onChangeIcon = ( val ) => {
-		console.log(val);
-
-		setChecked( val );
-		setAttributes( { icon: val } );
-	};
 
 	const icons = [
 		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M10.3 24.8V26H20v16.9H0V26.2C0 13.4 6.6 7.1 19.9 7.1v7.1c-3.4.5-5.9 1.6-7.4 3.3-1.5 1.7-2.2 4.1-2.2 7.3zm30 0V26H50v16.9H30.1V26.2c0-12.7 6.6-19.1 19.9-19.1v7.1c-6.4.7-9.7 4.3-9.7 10.6z"></path></svg>',
@@ -188,6 +181,10 @@ function EditContainer( props ) {
 
 	const onChangeCitationFontSize = ( val ) => {
 		setAttributes( { citationFontSize: val } );
+	};
+
+	const onChangeBoxShadow = ( newShadow ) => {
+		setAttributes( { boxShadow: newShadow});
 	};
 
 	const resetFontSizes = () => {
@@ -240,6 +237,14 @@ function EditContainer( props ) {
 		<>
 		    <InspectorControls>
 				<PanelBody title={ __( 'General', 'wp-quote-blocks' ) }>
+					<RangeControl
+							label={ __( 'Shadow', 'wp-quote-blocks' ) }
+							value={ parseInt( boxShadow ) }
+							onChange={ onChangeBoxShadow }
+							step="1"
+							min={ 0 }
+							max={ 20 }
+					/>
 				</PanelBody>
                 <PanelBody title={ __( 'Icon Settings', 'wp-quote-blocks' ) }>
                     <RangeControl
@@ -321,7 +326,7 @@ function EditContainer( props ) {
 					</ToolsPanelItem>
 				</ToolsPanel>
 			</InspectorControls>
-			<div {...blockProps} className={`wp-quote-blocks quote-variation-${attributes.class}`} { ...useBlockProps( { style: { backgroundColor } } ) }>
+			<div {...blockProps} className={`wp-quote-blocks quote-variation-${attributes.class}`} { ...useBlockProps( { style: { backgroundColor, boxShadow: Math.max( (boxShadow - 10), 0 ) + 'px ' + Math.max( (boxShadow - 5), 0 ) + 'px ' + boxShadow + 'px ' + Math.max(boxShadow-7, 0) + 'px ' + 'rgba(0,0,0,0.2)' } } ) }>
 				{
                     <BlockControls>
                         <AlignmentToolbar
