@@ -22,7 +22,7 @@ import { useDispatch, useSelect } from '@wordpress/data';
 
 import './editor.scss';
 
-import { PanelBody, SelectControl, RangeControl, Button, ButtonGroup, __experimentalRadio as Radio, __experimentalRadioGroup as RadioGroup,
+import { PanelBody, SelectControl, RangeControl, Button, ButtonGroup, ToggleControl, __experimentalRadio as Radio, __experimentalRadioGroup as RadioGroup,
     __experimentalToggleGroupControl as ToggleGroupControl,
     __experimentalToggleGroupControlOption as ToggleGroupControlOption,
 	__experimentalBoxControl as BoxControl,
@@ -105,6 +105,8 @@ function EditContainer( props ) {
 		iconColor,
 		backgroundColor,
 		boxShadow,
+		showLines,
+		linesColor,
 	} = attributes;
 
 	const onChangeIconSize = ( size ) => {
@@ -121,8 +123,12 @@ function EditContainer( props ) {
 		setAttributes( { iconColor: color } );
 	};
 
-	const onChangeBackgroundColor = ( color ) => {
-		setAttributes( { backgroundColor: color } );
+	const onChangeBackgroundColor = ( newColor ) => {
+		setAttributes( { backgroundColor: newColor } );
+	};
+
+	const onChangeLinesColor = ( newColor ) => {
+		setAttributes( { linesColor: newColor } );
 	};
 
 	const colorSettingsDropDown = [
@@ -134,7 +140,12 @@ function EditContainer( props ) {
 		{
 			value: backgroundColor,
 			onChange: onChangeBackgroundColor,
-			label: __( 'Backgroundcolor', 'wp-quote-blocks' ),
+			label: __( 'Background color', 'wp-quote-blocks' ),
+		},
+		{
+			value: linesColor,
+			onChange: onChangeLinesColor,
+			label: __( 'Lines color', 'wp-quote-blocks' ),
 		}
 	];
 
@@ -147,6 +158,8 @@ function EditContainer( props ) {
 		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M9.4 14.6c-2.4 2.9-3.6 5.9-3.6 8.9 0 1.3.2 2.4.5 3.3 1.8-1.4 3.8-2.1 6-2.1 2.9 0 5.3.9 7.3 2.7 2 1.8 3 4.2 3 7.3 0 1.9-.5 3.6-1.4 5.1-.9 1.5-2.2 2.7-3.8 3.6s-3.3 1.3-5.1 1.3c-4.1 0-7.3-1.6-9.5-4.9C.9 36.9 0 33.5 0 29.4c0-5.2 1.4-9.9 4.1-14 2.8-4.1 6.9-7.5 12.5-10l1.5 2.8c-3.3 1.3-6.2 3.5-8.7 6.4zm27.5 0c-2.4 2.9-3.6 5.9-3.6 8.9 0 1.3.2 2.4.5 3.3 1.8-1.4 3.8-2.1 6-2.1 2.9 0 5.4.9 7.4 2.7 2 1.8 3 4.2 3 7.3 0 2.8-1 5.2-3 7.1-2 1.9-4.4 2.9-7.3 2.9-4.1 0-7.3-1.6-9.5-4.9-1.8-2.7-2.8-6.2-2.8-10.3 0-5.2 1.4-9.9 4.1-14 2.8-4.1 6.9-7.5 12.5-10l1.5 2.8c-3.5 1.2-6.4 3.4-8.8 6.3z"></path></svg>',
 		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M22.6 12.8c-1.9.5-3.7 1.2-5.3 2.1-1.6.9-3.1 1.9-4.3 3-1.2 1.1-2.2 2.4-2.9 3.7-.7 1.3-1.1 2.7-1.1 4 0 1.2.1 1.8.3 1.8.8 0 1.5-.3 2.4-.9.8-.6 1.9-.9 3.3-.9 2.1 0 3.9.8 5.4 2.4 1.5 1.6 2.3 3.7 2.3 6.2s-1 4.6-2.9 6.4c-1.9 1.8-4.3 2.6-7.3 2.6-1.8 0-3.4-.4-4.9-1.1-1.5-.8-2.8-1.8-3.9-3.1s-2-2.8-2.6-4.6C.3 32.5 0 30.6 0 28.6c0-3 .6-5.8 1.8-8.3 1.2-2.5 2.8-4.8 4.9-6.7 2-1.9 4.4-3.5 7.2-4.6 2.8-1.2 5.6-1.8 8.6-2v5.8zm27.4 0c-1.9.5-3.7 1.2-5.4 2.1-1.7.9-3.1 1.9-4.3 3-1.2 1.1-2.2 2.4-2.9 3.7-.7 1.3-1.1 2.7-1.1 4 0 1.2.1 1.8.4 1.8.8 0 1.5-.3 2.3-.9.8-.6 1.9-.9 3.3-.9 2 0 3.8.8 5.3 2.4 1.5 1.6 2.3 3.7 2.3 6.2s-1 4.6-2.9 6.4c-2 1.8-4.4 2.6-7.3 2.6-1.7 0-3.3-.4-4.8-1.1-1.5-.8-2.8-1.8-3.9-3.1s-2-2.8-2.7-4.6c-.7-1.8-1-3.7-1-5.7 0-3 .6-5.8 1.8-8.3 1.2-2.5 2.8-4.8 4.9-6.7 2-1.9 4.4-3.5 7.2-4.6 2.8-1.2 5.7-1.8 8.8-2v5.7z"></path></svg>',
 		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M14.7 45.9H0V31.3C0 17.6 8.6 6.6 21.6 4.1v4.7c-10 2.6-16.7 10.9-16.7 22.6h9.8v14.5zm28.1 0H28.4V31.3C28.4 17.6 37 6.6 50 4.1v4.7c-9.8 2.6-16.7 10.9-16.7 22.6h9.5v14.5z"></path></svg>',
+		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 310.284 310.284"><path d="M155.142,0C69.597,0,0,69.597,0,155.142s69.597,155.142,155.142,155.142s155.142-69.597,155.142-155.142  S240.688,0,155.142,0z M79.171,231.401c-1.746,1.182-6.129,2.222-8.693-0.625l-4.731-5.95c-2.288-3.869,0.483-7.457,2.277-8.945  c8.529-7.075,14.731-12.548,18.601-16.419c7.589-7.981,13.199-15.97,16.903-23.935c0.847-1.821-1.315-2.977-2.438-3.345  c-27.967-9.166-41.955-25.325-41.955-48.474c0-13.639,4.53-24.722,13.585-33.242c9.059-8.525,20.407-12.785,34.041-12.785  c12.146,0,22.909,5.539,32.283,16.621c9.165,10.438,13.744,21.735,13.744,33.881C152.789,163.78,128.251,198.185,79.171,231.401z   M185.61,231.401c-1.746,1.182-6.129,2.222-8.693-0.625l-4.731-5.95c-2.288-3.869,0.483-7.457,2.277-8.945  c8.528-7.075,14.731-12.548,18.601-16.419c7.589-7.981,13.199-15.97,16.904-23.935c0.847-1.821-1.315-2.977-2.438-3.345  c-27.967-9.166-41.955-25.325-41.955-48.474c0-13.639,4.53-24.722,13.585-33.242c9.06-8.525,20.407-12.785,34.041-12.785  c12.146,0,22.909,5.539,32.283,16.621c9.164,10.438,13.744,21.735,13.744,33.881C259.228,163.78,234.69,198.185,185.61,231.401z"/></svg>',
+		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25.625 25.625"><path d="M12.812,0.435C5.736,0.435,0,5.499,0,11.747c0,3.168,1.479,6.028,3.855,8.082   c-0.521,3.01-3.883,4.23-3.652,5.059c2.84,1.175,8.529-1.412,9.918-2.083c0.869,0.164,1.768,0.255,2.691,0.255   c7.076,0,12.813-5.064,12.813-11.313S19.888,0.435,12.812,0.435z M11.904,12.218c0,3.076-1.361,4.802-4.043,5.129   c-0.006,0.001-0.01,0.001-0.016,0.001c-0.029,0-0.061-0.011-0.082-0.031c-0.027-0.023-0.043-0.058-0.043-0.094V15.66   c0-0.046,0.025-0.088,0.064-0.109c1.223-0.667,1.834-1.717,1.865-3.207H7.845c-0.068,0-0.125-0.056-0.125-0.125V8.286   c0-0.069,0.057-0.125,0.125-0.125h3.934c0.068,0,0.125,0.056,0.125,0.125V12.218z M18.869,12.218c0,3.029-1.205,4.563-4.033,5.128   c-0.008,0.001-0.016,0.002-0.024,0.002c-0.029,0-0.057-0.01-0.08-0.028c-0.029-0.023-0.045-0.06-0.045-0.097V15.66   c0-0.046,0.025-0.088,0.064-0.109c1.223-0.667,1.834-1.717,1.865-3.207h-1.804c-0.068,0-0.125-0.056-0.125-0.125V8.286   c0-0.069,0.057-0.125,0.125-0.125h3.932c0.07,0,0.125,0.056,0.125,0.125V12.218z"/></svg>',
 	];
 
 	const svgElementFromString = ( str ) => {
@@ -170,7 +183,7 @@ function EditContainer( props ) {
 	if ( attributes.class.includes( 'closed' ) ) {
 		right_icon = (
 			<div className="quote-icon quote-right-icon">
-				<svg xlmns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" { ...useBlockProps( { style: { ...iconStyles, transform: 'rotate(180deg)' }  } ) } dangerouslySetInnerHTML={{__html: svgElementFromString( attributes.icon ).innerHTML}} />
+				<svg xlmns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" style={{ ...iconStyles, transform: 'rotate(180deg)' }} dangerouslySetInnerHTML={{__html: svgElementFromString( attributes.icon ).innerHTML}} />
 			</div>
 		);
 	}
@@ -252,7 +265,7 @@ function EditContainer( props ) {
 
 	const loadFontCss = async ( font ) => {
 		const linkId = font.replace(/ /g, '+');
-		if ( ! font || document.getElementById( `google-font-${linkId}` ) ) {
+		if ( fetchSystemFonts().includes( font ) || ! font || document.getElementById( `google-font-${linkId}` ) ) {
 			return;
 		}
 		const url = `https://fonts.googleapis.com/css?family=${font}`;
@@ -298,6 +311,10 @@ function EditContainer( props ) {
 			</SelectControl>
 		);
 	};
+
+	const iconSVG = svgElementFromString( attributes.icon );
+    const [ hasFixedBackground, setHasFixedBackground ] = useState( false );
+
     return (
 		<>
 		    <InspectorControls>
@@ -309,6 +326,18 @@ function EditContainer( props ) {
 							step="1"
 							min={ 0 }
 							max={ 20 }
+					/>
+					<ToggleControl
+						label="Show lines"
+						help={
+							showLines
+								? 'Lines are shown'
+								: 'Lines are hidden'
+						}
+						checked={ showLines }
+						onChange={ () => {
+							setAttributes( { showLines: ! showLines } );
+						} }
 					/>
 				</PanelBody>
                 <PanelBody title={ __( 'Icon Settings', 'wp-quote-blocks' ) }>
@@ -344,6 +373,13 @@ function EditContainer( props ) {
 						<Button variant={ attributes.icon === icons[7] ? 'primary': 'secondary' } onClick={() => setAttributes({ icon: icons[7]})}>
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M14.7 45.9H0V31.3C0 17.6 8.6 6.6 21.6 4.1v4.7c-10 2.6-16.7 10.9-16.7 22.6h9.8v14.5zm28.1 0H28.4V31.3C28.4 17.6 37 6.6 50 4.1v4.7c-9.8 2.6-16.7 10.9-16.7 22.6h9.5v14.5z"></path></svg>
 						</Button>
+						<Button variant={ attributes.icon === icons[8] ? 'primary': 'secondary' } onClick={() => setAttributes({ icon: icons[8]})}>
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 310.284 310.284"><path d="M155.142,0C69.597,0,0,69.597,0,155.142s69.597,155.142,155.142,155.142s155.142-69.597,155.142-155.142  S240.688,0,155.142,0z M79.171,231.401c-1.746,1.182-6.129,2.222-8.693-0.625l-4.731-5.95c-2.288-3.869,0.483-7.457,2.277-8.945  c8.529-7.075,14.731-12.548,18.601-16.419c7.589-7.981,13.199-15.97,16.903-23.935c0.847-1.821-1.315-2.977-2.438-3.345  c-27.967-9.166-41.955-25.325-41.955-48.474c0-13.639,4.53-24.722,13.585-33.242c9.059-8.525,20.407-12.785,34.041-12.785  c12.146,0,22.909,5.539,32.283,16.621c9.165,10.438,13.744,21.735,13.744,33.881C152.789,163.78,128.251,198.185,79.171,231.401z   M185.61,231.401c-1.746,1.182-6.129,2.222-8.693-0.625l-4.731-5.95c-2.288-3.869,0.483-7.457,2.277-8.945  c8.528-7.075,14.731-12.548,18.601-16.419c7.589-7.981,13.199-15.97,16.904-23.935c0.847-1.821-1.315-2.977-2.438-3.345  c-27.967-9.166-41.955-25.325-41.955-48.474c0-13.639,4.53-24.722,13.585-33.242c9.06-8.525,20.407-12.785,34.041-12.785  c12.146,0,22.909,5.539,32.283,16.621c9.164,10.438,13.744,21.735,13.744,33.881C259.228,163.78,234.69,198.185,185.61,231.401z"/></svg>
+						</Button>
+						<Button variant={ attributes.icon === icons[9] ? 'primary': 'secondary' } onClick={() => setAttributes({ icon: icons[9]})}>
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25.625 25.625"><path d="M12.812,0.435C5.736,0.435,0,5.499,0,11.747c0,3.168,1.479,6.028,3.855,8.082   c-0.521,3.01-3.883,4.23-3.652,5.059c2.84,1.175,8.529-1.412,9.918-2.083c0.869,0.164,1.768,0.255,2.691,0.255   c7.076,0,12.813-5.064,12.813-11.313S19.888,0.435,12.812,0.435z M11.904,12.218c0,3.076-1.361,4.802-4.043,5.129   c-0.006,0.001-0.01,0.001-0.016,0.001c-0.029,0-0.061-0.011-0.082-0.031c-0.027-0.023-0.043-0.058-0.043-0.094V15.66   c0-0.046,0.025-0.088,0.064-0.109c1.223-0.667,1.834-1.717,1.865-3.207H7.845c-0.068,0-0.125-0.056-0.125-0.125V8.286   c0-0.069,0.057-0.125,0.125-0.125h3.934c0.068,0,0.125,0.056,0.125,0.125V12.218z M18.869,12.218c0,3.029-1.205,4.563-4.033,5.128   c-0.008,0.001-0.016,0.002-0.024,0.002c-0.029,0-0.057-0.01-0.08-0.028c-0.029-0.023-0.045-0.06-0.045-0.097V15.66   c0-0.046,0.025-0.088,0.064-0.109c1.223-0.667,1.834-1.717,1.865-3.207h-1.804c-0.068,0-0.125-0.056-0.125-0.125V8.286   c0-0.069,0.057-0.125,0.125-0.125h3.932c0.07,0,0.125,0.056,0.125,0.125V12.218z"/></svg>
+						</Button>
+
 					</ButtonGroup>
 				</PanelBody>
 				<PanelColorSettings
@@ -385,7 +421,7 @@ function EditContainer( props ) {
 					</ToolsPanelItem>
 				</ToolsPanel>
 			</InspectorControls>
-			<div {...blockProps} className={`wp-quote-blocks quote-variation-${attributes.class}`} { ...useBlockProps( { style: blockStyles } ) }>
+			<div { ...useBlockProps( { style: blockStyles, className: `wp-quote-blocks quote-variation-${attributes.class}` } ) }>
 				{
                     <BlockControls>
                         <AlignmentToolbar
@@ -394,9 +430,11 @@ function EditContainer( props ) {
                         />
                     </BlockControls>
                 }
-
+				{ showLines && (
+					<div className="wpqb__line" style={{ borderColor: linesColor }}></div>
+				)}
 				<div className="quote-icon">
-					<svg xlmns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" { ...useBlockProps( { style: iconStyles } ) } dangerouslySetInnerHTML={{__html: svgElementFromString( attributes.icon ).innerHTML}} />
+					<svg xlmns="http://www.w3.org/2000/svg" viewBox={iconSVG.getAttribute( 'viewBox' )} { ...useBlockProps( { style: iconStyles } ) } dangerouslySetInnerHTML={{__html: iconSVG.innerHTML}} />
 				</div>
 				<div className="quote-wrapper">
 					<RichText
@@ -418,6 +456,9 @@ function EditContainer( props ) {
 					/>
 				</div>
 				{ right_icon }
+				{ attributes.showLines && (
+					<div className="wpqb__line" style={{ borderColor: linesColor }}></div>
+				)}
 			</div>
 		</>
 	);

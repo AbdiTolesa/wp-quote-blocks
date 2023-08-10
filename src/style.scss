@@ -41,10 +41,16 @@
 
 .quote-variation-block-quotation {
 	display: flex;
-}
-
-.quote-variation-block-quotation .quote-icon {
-	padding-right: 1em;
+	flex-wrap: wrap;
+	.quote-icon {
+		padding-right: 1em;
+	}
+	.wpqb__line {
+		width: 100%;
+	}
+	.quote-icon, .quote-wrapper {
+		flex-grow: 1;
+	}
 }
 
 .quote-variation-closed .quote-right-icon {
@@ -55,4 +61,8 @@
 .wp-quote-icons__options button svg {
 	width: 24px;
 	height: 24px;
+}
+
+.wpqb__line {
+	border-bottom: solid #000;
 }

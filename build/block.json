@@ -59,6 +59,14 @@
     "boxShadow": {
       "type": "integer",
       "default": 0
+    },
+    "showLines": {
+      "type": "boolean",
+      "default": false
+    },
+    "linesColor": {
+      "type": "string",
+      "default": "#ABABAB"
     }
   },
   "supports": {
