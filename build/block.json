@@ -57,8 +57,8 @@
       "default": ""
     },
     "boxShadow": {
-      "type": "string",
-      "default": "none"
+      "type": "integer",
+      "default": 0
     }
   },
   "supports": {

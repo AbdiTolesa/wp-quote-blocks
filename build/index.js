@@ -166,7 +166,7 @@ function EditContainer(props) {
   };
   const onChangeBoxShadow = newShadow => {
     setAttributes({
-      boxShadow: newShadow
+      boxShadow: parseInt(newShadow)
     });
   };
   const resetFontSizes = () => {
@@ -176,27 +176,57 @@ function EditContainer(props) {
     });
   };
   const fetchGoogleFonts = async () => {
-    const KEY = 'AIzaSyBE3Q6dX73OWOiG4IatUgNBHur6BYxIXE0';
+    const KEY = await get_google_api_key();
     const url = `https://www.googleapis.com/webfonts/v1/webfonts?key=${KEY}`;
     const response = await fetch(url);
     const fonts = await response.json();
     return fonts;
+  };
+  const get_google_api_key = async function () {
+    let apiKey = '';
+    const apiRequest = wp.ajax.post('get_google_api_key', {
+      // _wpnonce: 'customBlockData.nonce',
+      action: 'get_google_api_key'
+    });
+    apiKey = await apiRequest.done(function (response) {
+      return Promise.resolve(response);
+    });
+    return Promise.resolve(apiKey);
   };
   const [fontOptions, setFontOptions] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)('');
   const getFontOptions = () => {
     if (fontOptions) {
       return;
     }
-    let options = [];
+    let options = {
+      system: [],
+      google: []
+    };
+    let systemFonts = fetchSystemFonts();
+    systemFonts.forEach(font => {
+      options.system.push({
+        label: font,
+        value: font
+      });
+    });
     fetchGoogleFonts().then(fonts => {
       fonts.items.forEach(font => {
-        options.push({
+        options.google.push({
           label: font.family,
           value: font.family
         });
       });
-      setFontOptions(options);
+      setFontOptions({
+        ...options
+      });
     });
+  };
+  const fetchSystemFonts = () => {
+    const fontFaces = [...document.fonts.values()];
+    const families = fontFaces.map(font => font.family);
+
+    // converted to set then to array to remove duplicates
+    return [...new Set(families)];
   };
   const onChangeFontFamily = newFont => {
     setAttributes({
@@ -214,6 +244,33 @@ function EditContainer(props) {
   };
   loadFontCss(attributes.fontFamily);
   getFontOptions();
+  const blockStyles = {
+    backgroundColor,
+    boxShadow: Math.max(boxShadow - 10, 0) + 'px ' + Math.max(boxShadow - 5, 0) + 'px ' + boxShadow + 'px ' + Math.max(boxShadow - 7, 0) + 'px ' + 'rgba(0,0,0,0.2)'
+  };
+  const getFonts = type => {
+    return fontOptions[type];
+  };
+  const fontFamilySelector = () => {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.SelectControl, {
+      label: "Select font",
+      value: attributes.fontFamily
+      // options={ fontOptions }
+      ,
+      onChange: newFont => onChangeFontFamily(newFont),
+      __nextHasNoMarginBottom: true
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("optgroup", {
+      label: "System fonts"
+    }, getFonts('system').map(font => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+      key: font.value,
+      value: font.value
+    }, font.label))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("optgroup", {
+      label: "Google fonts"
+    }, getFonts('google').map(font => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+      key: font.value,
+      value: font.value
+    }, font.label))));
+  };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.InspectorControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.PanelBody, {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('General', 'wp-quote-blocks')
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.RangeControl, {
@@ -369,25 +426,16 @@ function EditContainer(props) {
     value: "2.5rem",
     label: "XXL"
   })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.__experimentalToolsPanelItem, {
-    hasValue: () => true,
+    hasValue: () => !!fontOptions,
     label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Font family'),
     onDeselect: () => resetFontSizes()
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.PanelBody, {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Font family', 'wp-quote-blocks')
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.SelectControl, {
-    label: "Select font",
-    value: attributes.fontFamily,
-    options: fontOptions,
-    onChange: newFont => onChangeFontFamily(newFont),
-    __nextHasNoMarginBottom: true
-  }))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, fontFamilySelector)))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ...blockProps,
     className: `wp-quote-blocks quote-variation-${attributes.class}`,
     ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.useBlockProps)({
-      style: {
-        backgroundColor,
-        boxShadow: Math.max(boxShadow - 10, 0) + 'px ' + Math.max(boxShadow - 5, 0) + 'px ' + boxShadow + 'px ' + Math.max(boxShadow - 7, 0) + 'px ' + 'rgba(0,0,0,0.2)'
-      }
+      style: blockStyles
     })
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.BlockControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.AlignmentToolbar, {
     value: attributes.alignment,
@@ -559,16 +607,17 @@ function save(props) {
       }
     }));
   }
+  const blockStyles = {
+    backgroundColor,
+    boxShadow: Math.max(boxShadow - 10, 0) + 'px ' + Math.max(boxShadow - 5, 0) + 'px ' + boxShadow + 'px ' + Math.max(boxShadow - 7, 0) + 'px ' + 'rgba(0,0,0,0.2)'
+  };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ...blockProps,
     ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save({
       className: `quote-variation-${attributes.class}`
     }),
     ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save({
-      style: {
-        backgroundColor,
-        boxShadow: Math.max(boxShadow - 10, 0) + 'px ' + Math.max(boxShadow - 5, 0) + 'px ' + boxShadow + 'px ' + Math.max(boxShadow - 7, 0) + 'px ' + 'rgba(0,0,0,0.2)'
-      }
+      style: blockStyles
     })
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "quote-icon"
@@ -747,7 +796,7 @@ module.exports = window["wp"]["i18n"];
   \************************/
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/wp-quote-blocks","version":"0.1.0","title":"WP Quote Blocks","category":"widgets","icon":"format-quote","description":"Collection of a load of Quote styles.","attributes":{"align":{"type":"string","default":"left"},"class":{"type":"string","default":""},"quote":{"type":"string","default":""},"citation":{"type":"string","default":""},"iconSize":{"type":"string","default":"30px"},"iconColor":{"type":"string","default":"#000000"},"backgroundColor":{"type":"string","default":"#ffffff"},"icon":{"type":"string","default":"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 50 50\\"><path d=\\"M10.3 24.8V26H20v16.9H0V26.2C0 13.4 6.6 7.1 19.9 7.1v7.1c-3.4.5-5.9 1.6-7.4 3.3-1.5 1.7-2.2 4.1-2.2 7.3zm30 0V26H50v16.9H30.1V26.2c0-12.7 6.6-19.1 19.9-19.1v7.1c-6.4.7-9.7 4.3-9.7 10.6z\\"></path></svg>"},"alignment":{"type":"string","default":""},"quoteFontSize":{"type":"string","default":"1rem"},"citationFontSize":{"type":"string","default":"0.75rem"},"fontFamily":{"type":"string","default":""},"boxShadow":{"type":"string","default":"none"}},"supports":{"html":false,"align":["wide","full"],"typography":{"lineHeight":true}},"textdomain":"wp-quote-blocks","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css"}');
+module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/wp-quote-blocks","version":"0.1.0","title":"WP Quote Blocks","category":"widgets","icon":"format-quote","description":"Collection of a load of Quote styles.","attributes":{"align":{"type":"string","default":"left"},"class":{"type":"string","default":""},"quote":{"type":"string","default":""},"citation":{"type":"string","default":""},"iconSize":{"type":"string","default":"30px"},"iconColor":{"type":"string","default":"#000000"},"backgroundColor":{"type":"string","default":"#ffffff"},"icon":{"type":"string","default":"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 50 50\\"><path d=\\"M10.3 24.8V26H20v16.9H0V26.2C0 13.4 6.6 7.1 19.9 7.1v7.1c-3.4.5-5.9 1.6-7.4 3.3-1.5 1.7-2.2 4.1-2.2 7.3zm30 0V26H50v16.9H30.1V26.2c0-12.7 6.6-19.1 19.9-19.1v7.1c-6.4.7-9.7 4.3-9.7 10.6z\\"></path></svg>"},"alignment":{"type":"string","default":""},"quoteFontSize":{"type":"string","default":"1rem"},"citationFontSize":{"type":"string","default":"0.75rem"},"fontFamily":{"type":"string","default":""},"boxShadow":{"type":"integer","default":0}},"supports":{"html":false,"align":["wide","full"],"typography":{"lineHeight":true}},"textdomain":"wp-quote-blocks","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css"}');
 
 /***/ })
 

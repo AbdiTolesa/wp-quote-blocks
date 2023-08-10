@@ -184,7 +184,7 @@ function EditContainer( props ) {
 	};
 
 	const onChangeBoxShadow = ( newShadow ) => {
-		setAttributes( { boxShadow: newShadow});
+		setAttributes( { boxShadow: parseInt( newShadow ) });
 	};
 
 	const resetFontSizes = () => {
@@ -192,7 +192,7 @@ function EditContainer( props ) {
 	};
 
 	const fetchGoogleFonts = async () => {
-		const KEY = 'AIzaSyBE3Q6dX73OWOiG4IatUgNBHur6BYxIXE0';
+		const KEY = await get_google_api_key();
 		const url = `https://www.googleapis.com/webfonts/v1/webfonts?key=${KEY}`;
 		const response = await fetch( url );
 		const fonts = await response.json();
@@ -200,20 +200,49 @@ function EditContainer( props ) {
 		return fonts;
 	};
 
+	const get_google_api_key = async function() {
+		let apiKey = '';
+		const apiRequest = wp.ajax.post( 'get_google_api_key', {
+			// _wpnonce: 'customBlockData.nonce',
+			action: 'get_google_api_key',
+		});
+
+		apiKey = await apiRequest.done(function(response) {
+			return Promise.resolve( response );
+		});
+
+		return Promise.resolve( apiKey );
+	}
+
+	
 	const [ fontOptions, setFontOptions ] = useState('');
 
 	const getFontOptions = () => {
 		if ( fontOptions ) {
 			return;
 		}
-		let options = [];
-		fetchGoogleFonts().then( ( fonts ) => {
-			fonts.items.forEach( font => {
-				options.push( { label: font.family, value: font.family } );
-			});
-			setFontOptions( options );
+
+		let options = { system: [], google: [] };
+		let systemFonts = fetchSystemFonts();
+		systemFonts.forEach( font => {
+			options.system.push( { label: font, value: font } );
 		});
 
+		fetchGoogleFonts().then( ( fonts ) => {
+			fonts.items.forEach( font => {
+				options.google.push( { label: font.family, value: font.family } );
+			});
+			setFontOptions( {...options} );
+		});
+		
+	};
+
+	const fetchSystemFonts = () => {
+			const fontFaces = [...document.fonts.values()];
+			const families = fontFaces.map(font => font.family);
+		  
+			// converted to set then to array to remove duplicates
+			return [...new Set(families)];
 	};
 
 	const onChangeFontFamily = ( newFont ) => {
@@ -233,6 +262,42 @@ function EditContainer( props ) {
 	loadFontCss( attributes.fontFamily );
 
 	getFontOptions();
+
+	const blockStyles = {
+		backgroundColor,
+		boxShadow: Math.max( (boxShadow - 10), 0 ) + 'px ' + Math.max( (boxShadow - 5), 0 ) + 'px ' + boxShadow + 'px ' + Math.max(boxShadow - 7, 0) + 'px ' + 'rgba(0,0,0,0.2)'
+	};
+
+	const getFonts = ( type ) => {
+		return fontOptions[type];
+	};
+
+	const fontFamilySelector = () => {
+		return (
+			<SelectControl
+			label="Select font"
+			value={ attributes.fontFamily }
+			// options={ fontOptions }
+			onChange={ ( newFont ) => onChangeFontFamily( newFont ) }
+			__nextHasNoMarginBottom
+			>
+				<optgroup label="System fonts">
+					{
+						getFonts( 'system' ).map( font => (
+							<option key={font.value} value={font.value}>{font.label}</option>
+						))
+					}
+				</optgroup>
+				<optgroup label="Google fonts">
+					{
+						getFonts( 'google' ).map( font => (
+							<option key={font.value} value={font.value}>{font.label}</option>
+						))
+					}
+				</optgroup>
+			</SelectControl>
+		);
+	};
     return (
 		<>
 		    <InspectorControls>
@@ -310,23 +375,17 @@ function EditContainer( props ) {
 						</PanelBody>
 					</ToolsPanelItem>
 					<ToolsPanelItem
-						hasValue={ () => true }
+						hasValue={ () => !! fontOptions }
 						label={ __( 'Font family' ) }
 						onDeselect={ () => resetFontSizes() }
 					>
 						<PanelBody title={ __( 'Font family', 'wp-quote-blocks' ) }>
-							<SelectControl
-								label="Select font"
-								value={ attributes.fontFamily }
-								options={ fontOptions }
-								onChange={ ( newFont ) => onChangeFontFamily( newFont ) }
-								__nextHasNoMarginBottom
-							/>
+							{ fontFamilySelector }
 						</PanelBody>
 					</ToolsPanelItem>
 				</ToolsPanel>
 			</InspectorControls>
-			<div {...blockProps} className={`wp-quote-blocks quote-variation-${attributes.class}`} { ...useBlockProps( { style: { backgroundColor, boxShadow: Math.max( (boxShadow - 10), 0 ) + 'px ' + Math.max( (boxShadow - 5), 0 ) + 'px ' + boxShadow + 'px ' + Math.max(boxShadow-7, 0) + 'px ' + 'rgba(0,0,0,0.2)' } } ) }>
+			<div {...blockProps} className={`wp-quote-blocks quote-variation-${attributes.class}`} { ...useBlockProps( { style: blockStyles } ) }>
 				{
                     <BlockControls>
                         <AlignmentToolbar
