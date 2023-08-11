@@ -327,6 +327,9 @@ function EditContainer( props ) {
 
 	const getFontWeightOptions = ( fontFamily ) => {
 		let options = [];
+		if ( '' === fontFamily ) {
+			return options;
+		}
 		getWeightsForFontFamily( googleFonts, fontFamily ).forEach( weight => {
 			options.push( { label: weight, value: weight } );
 		});
@@ -495,7 +498,7 @@ function EditContainer( props ) {
 						</PanelBody>
 					</ToolsPanelItem>
 					<ToolsPanelItem
-						hasValue={ () => !! getWeightsForFontFamily( googleFonts, attributes.fontFamily ) }
+						hasValue={ () => true }
 						label={ __( 'Font weight' ) }
 						// onDeselect={ () => resetFontSizes() }
 					>

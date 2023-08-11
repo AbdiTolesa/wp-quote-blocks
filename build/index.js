@@ -293,6 +293,9 @@ function EditContainer(props) {
   };
   const getFontWeightOptions = fontFamily => {
     let options = [];
+    if ('' === fontFamily) {
+      return options;
+    }
     getWeightsForFontFamily(googleFonts, fontFamily).forEach(weight => {
       options.push({
         label: weight,
@@ -562,7 +565,7 @@ function EditContainer(props) {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.PanelBody, {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Font family', 'wp-quote-blocks')
   }, fontFamilySelector)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.__experimentalToolsPanelItem, {
-    hasValue: () => !!getWeightsForFontFamily(googleFonts, attributes.fontFamily),
+    hasValue: () => true,
     label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Font weight')
     // onDeselect={ () => resetFontSizes() }
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.PanelBody, {
