@@ -51,6 +51,9 @@
 	.quote-icon, .quote-wrapper {
 		flex-grow: 1;
 	}
+	.quote-wrapper {
+		max-width: 80%;
+	}
 }
 
 .quote-variation-closed .quote-right-icon {
