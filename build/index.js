@@ -587,9 +587,16 @@ function EditContainer(props) {
     onClick: () => setAttributes({
       class: ''
     })
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "dashicon dashicons dashicons-layout"
-  })))), showLines && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("svg", {
+    xmlns: "http://www.w3.org/2000/svg",
+    fill: "#000000",
+    width: "24px",
+    height: "24px",
+    viewBox: "0 0 16 16"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("path", {
+    d: "M9 6h7v10H9V6zm2 2v6h3V8h-3zM0 14h7v2H0v-2zm0-8h7v2H0V6zm0 4h7v2H0v-2zM0 0h16v4H0V0z",
+    "fill-rule": "evenodd"
+  }))))), showLines && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "wpqb__line",
     style: {
       borderColor: linesColor
