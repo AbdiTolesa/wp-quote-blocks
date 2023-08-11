@@ -67,14 +67,24 @@ export default function save( props ) {
 	};
 
 	return (
-        <div {...blockProps} { ...useBlockProps.save( { className: `quote-variation-${attributes.class}` } ) } { ...useBlockProps.save( { style: blockStyles } ) }>
+        <div { ...useBlockProps.save( { style: blockStyles, className: `wp-quote-blocks quote-variation-${attributes.class}` } ) }>
 			{ attributes.showLines && (
 				<div className="wpqb__line" style={{ borderColor: attributes.linesColor }}></div>
 			)}
 			{ leftIcon }
 			<div className="quote-wrapper" style={{ fontWeight }}>
-				<RichText.Content { ...blockProps } { ...useBlockProps.save( { style: { textAlign: attributes.alignment, fontSize: attributes.quoteFontSize, fontFamily: attributes.fontFamily  } } ) } tagName="p" className="quote" value={ attributes.quote } />
-				<RichText.Content { ...blockProps } { ...useBlockProps.save( { style: { textAlign: attributes.alignment, fontSize: attributes.citationFontSize, fontFamily: attributes.fontFamily } } ) } tagName="p" className="citation" value={ attributes.citation } />
+				<RichText.Content
+				style={ { textAlign: attributes.alignment ? attributes.alignment : 'inherit', fontSize: attributes.quoteFontSize, fontFamily: attributes.fontFamily } }
+ 				tagName="p"
+				className="quote"
+				value={ attributes.quote }
+				/>
+				<RichText.Content
+				style={ { textAlign: attributes.alignment ? attributes.alignment : 'inherit', fontSize: attributes.citationFontSize, fontFamily: attributes.fontFamily } }
+ 				tagName="p"
+				className="citation"
+				value={ attributes.citation }
+				/>
 			</div>
 			{ rightIcon }
 			{ attributes.showLines && (

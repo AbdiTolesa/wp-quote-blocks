@@ -22,7 +22,7 @@ import { useDispatch, useSelect } from '@wordpress/data';
 
 import './editor.scss';
 
-import { PanelBody, SelectControl, RangeControl, Button, ButtonGroup, ToggleControl, __experimentalRadio as Radio, __experimentalRadioGroup as RadioGroup,
+import { PanelBody, SelectControl, RangeControl, Button, ButtonGroup, ToggleControl, Toolbar, ToolbarButton, __experimentalRadio as Radio, __experimentalRadioGroup as RadioGroup,
     __experimentalToggleGroupControl as ToggleGroupControl,
     __experimentalToggleGroupControlOption as ToggleGroupControlOption,
 	__experimentalBoxControl as BoxControl,
@@ -65,8 +65,10 @@ function Placeholder( { clientId, setAttributes } ) {
     return (
         <div { ...blockProps }>
             <BlockVariationPicker
-                label="Choose style"
+                label="Choose variation"
+				instructions={__( 'Select a variation to start with.' )}
                 variations={ variations }
+				allowSkip={true}
                 onSelect={ ( variation = defaultVariation ) => {
                     if ( variation.attributes ) {
                         setAttributes( variation.attributes );
@@ -253,7 +255,14 @@ function EditContainer( props ) {
 			return [...new Set(families)];
 	};
 
-	const getWeightsForFontFamily = ( ( fonts, fontFamily )  => {
+	const getWeightsForFontFamily = async ( fontFamily )  => {
+		let fonts = googleFonts;
+		if ( ! fonts || fonts.length === 0 ) {
+			await fetchGoogleFonts().then( ( googleFonts ) => {
+				fonts = googleFonts;
+			});
+		}
+
 		let fontObj = fonts.items.find( font => {
 			return font.family === fontFamily;
 		})
@@ -269,12 +278,15 @@ function EditContainer( props ) {
 
 		variants = variants.filter( variant => variant !== null );
 		return [...new Set( variants )];
-	});
+	};
 
 	const onChangeFontFamily = ( newFont ) => {
 		setAttributes( { fontFamily: newFont } );
 		loadFontCss( newFont );
-		let fontFamilyWeights = getWeightsForFontFamily( newFont );
+		let fontFamilyWeights = []
+		getWeightsForFontFamily( newFont ).then( ( weights ) => {
+			fontFamilyWeights = weights;
+		});
 		if ( ! fontFamilyWeights.includes( attributes.fontFamily ) ) {
 			if ( fontFamilyWeights.length === 0 ) {
 				setAttributes( { fontWeight: '' } );
@@ -297,19 +309,10 @@ function EditContainer( props ) {
 		}
 
 		let fontVariants;
-
-		if ( ! googleFonts || googleFonts.length === 0 ) {
-			fetchGoogleFonts().then( ( fonts ) => {
-				setGoogleFonts( fonts );
-				fontVariants = getWeightsForFontFamily( fonts, font );
-				fontVariants = fontVariants.join( ',' );
-				insertFontStylesheet( fontVariants );
-			});
-		} else {
-			fontVariants = getWeightsForFontFamily( googleFonts, font );
-			fontVariants = fontVariants.join( ',' );
+		getWeightsForFontFamily( font ).then( ( weights ) => {
+			fontVariants = weights.join( ',' );
 			insertFontStylesheet( fontVariants );
-		}
+		});
 }
 
 	loadFontCss( attributes.fontFamily );
@@ -330,8 +333,10 @@ function EditContainer( props ) {
 		if ( '' === fontFamily ) {
 			return options;
 		}
-		getWeightsForFontFamily( googleFonts, fontFamily ).forEach( weight => {
-			options.push( { label: weight, value: weight } );
+		getWeightsForFontFamily( fontFamily ).then( ( weights ) => {
+			weights.forEach( weight => {
+				options.push( { label: weight, value: weight } );
+			});
 		});
 		return options;
 	};
@@ -455,7 +460,7 @@ function EditContainer( props ) {
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25.625 25.625"><path d="M12.812,0.435C5.736,0.435,0,5.499,0,11.747c0,3.168,1.479,6.028,3.855,8.082   c-0.521,3.01-3.883,4.23-3.652,5.059c2.84,1.175,8.529-1.412,9.918-2.083c0.869,0.164,1.768,0.255,2.691,0.255   c7.076,0,12.813-5.064,12.813-11.313S19.888,0.435,12.812,0.435z M11.904,12.218c0,3.076-1.361,4.802-4.043,5.129   c-0.006,0.001-0.01,0.001-0.016,0.001c-0.029,0-0.061-0.011-0.082-0.031c-0.027-0.023-0.043-0.058-0.043-0.094V15.66   c0-0.046,0.025-0.088,0.064-0.109c1.223-0.667,1.834-1.717,1.865-3.207H7.845c-0.068,0-0.125-0.056-0.125-0.125V8.286   c0-0.069,0.057-0.125,0.125-0.125h3.934c0.068,0,0.125,0.056,0.125,0.125V12.218z M18.869,12.218c0,3.029-1.205,4.563-4.033,5.128   c-0.008,0.001-0.016,0.002-0.024,0.002c-0.029,0-0.057-0.01-0.08-0.028c-0.029-0.023-0.045-0.06-0.045-0.097V15.66   c0-0.046,0.025-0.088,0.064-0.109c1.223-0.667,1.834-1.717,1.865-3.207h-1.804c-0.068,0-0.125-0.056-0.125-0.125V8.286   c0-0.069,0.057-0.125,0.125-0.125h3.932c0.07,0,0.125,0.056,0.125,0.125V12.218z"/></svg>
 						</Button>
 						<Button variant={ attributes.icon === icons[10] ? 'primary': 'secondary' } onClick={() => setAttributes({ icon: icons[10]})}>
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M280,185.143V416H496V16H457.6ZM464,384H312V198.857L464,54.1Z" class="ci-primary"/><path d="M232,16H193.6L16,185.143V416H232ZM200,384H48V198.857L200,54.1Z" class="ci-primary"/></svg>
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M280,185.143V416H496V16H457.6ZM464,384H312V198.857L464,54.1Z"/><path d="M232,16H193.6L16,185.143V416H232ZM200,384H48V198.857L200,54.1Z"/></svg>
 						</Button>
 
 					</ButtonGroup>
@@ -515,6 +520,15 @@ function EditContainer( props ) {
                             value={ attributes.alignment }
                             onChange={ onChangeAlignment }
                         />
+						<Toolbar>
+							<button
+								type="button"
+								className="components-button"
+								onClick={ () => setAttributes({class:''}) }
+							>
+								<span className="dashicon dashicons dashicons-layout"></span>
+							</button>
+						</Toolbar>
                     </BlockControls>
                 }
 				{ showLines && (
@@ -525,7 +539,7 @@ function EditContainer( props ) {
 					<RichText
 						tagName="p"
 						className="quote"
-						style={ { textAlign: attributes.alignment, fontSize: attributes.quoteFontSize, fontFamily: attributes.fontFamily } }
+						style={ { textAlign: attributes.alignment ? attributes.alignment : 'inherit', fontSize: attributes.quoteFontSize, fontFamily: attributes.fontFamily } }
 						value={ attributes.quote }
 						onChange={ ( quote ) => setAttributes( { quote } ) }
 						placeholder={ __( 'Add quote...' ) }
@@ -533,7 +547,7 @@ function EditContainer( props ) {
 					<RichText
 						tagName="p"
 						className="citation"
-						style={ { textAlign: attributes.alignment, fontSize: attributes.citationFontSize, fontFamily: attributes.fontFamily } }
+						style={ { textAlign: attributes.alignment ? attributes.alignment : 'inherit', fontSize: attributes.citationFontSize, fontFamily: attributes.fontFamily } }
 						value={ attributes.citation }
 						onChange={ ( citation ) => setAttributes( { citation } ) }
 						placeholder={ __( 'Add citation...' ) }
