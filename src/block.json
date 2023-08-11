@@ -56,6 +56,10 @@
 			"type": "string",
 			"default": ""
 		},
+		"fontWeight": {
+			"type": "string",
+			"default": ""
+		},
 		"boxShadow": {
 			"type": "integer",
 			"default": 0

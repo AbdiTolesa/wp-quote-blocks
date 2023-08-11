@@ -107,6 +107,7 @@ function EditContainer( props ) {
 		boxShadow,
 		showLines,
 		linesColor,
+		fontWeight,
 	} = attributes;
 
 	const onChangeIconSize = ( size ) => {
@@ -198,7 +199,7 @@ function EditContainer( props ) {
 	};
 
 	const fetchGoogleFonts = async () => {
-		const KEY = await get_google_api_key();
+		const KEY = await getGooglApiKey();
 		const url = `https://www.googleapis.com/webfonts/v1/webfonts?key=${KEY}`;
 		const response = await fetch( url );
 		const fonts = await response.json();
@@ -206,7 +207,7 @@ function EditContainer( props ) {
 		return fonts;
 	};
 
-	const get_google_api_key = async function() {
+	const getGooglApiKey = async function() {
 		let apiKey = '';
 		const apiRequest = wp.ajax.post( 'get_google_api_key', {
 			// _wpnonce: 'customBlockData.nonce',
@@ -252,9 +253,35 @@ function EditContainer( props ) {
 			return [...new Set(families)];
 	};
 
+	const getWeightsForFontFamily = ( ( fonts, fontFamily )  => {
+		let fontObj = fonts.items.find( font => {
+			return font.family === fontFamily;
+		})
+	    let variants = fontObj.variants.map( variant => {
+			if ( parseInt( variant ) ) {
+				return parseInt( variant );
+			}
+			if ( isNaN( variant ) && [ 'lighter', 'bold', 'bolder' ].includes( variant ) ) {
+				return variant;
+			}
+			return null;
+		});
+
+		variants = variants.filter( variant => variant !== null );
+		return [...new Set( variants )];
+	});
+
 	const onChangeFontFamily = ( newFont ) => {
 		setAttributes( { fontFamily: newFont } );
 		loadFontCss( newFont );
+		let fontFamilyWeights = getWeightsForFontFamily( newFont );
+		if ( ! fontFamilyWeights.includes( attributes.fontFamily ) ) {
+			if ( fontFamilyWeights.length === 0 ) {
+				setAttributes( { fontWeight: '' } );
+			} else {
+				setAttributes( { fontWeight: fontFamilyWeights[0] } );
+			}
+		}
 	};
 
 	const loadFontCss = async ( font ) => {
@@ -263,20 +290,27 @@ function EditContainer( props ) {
 			return;
 		}
 		let url = `https://fonts.googleapis.com/css?family=${font}`;
-		let fontObj, fontVariants;
 
-		fontObj = googleFonts.items.find( currentFont => {
-			return currentFont.family === font;
-		});
-		fontVariants = fontObj.variants;
-		fontVariants = fontVariants.join( ',' );
-
-		if ( fontVariants ) {
-			url += `:${fontVariants}`;
+		const insertFontStylesheet = ( fontVariants ) => {
+			url += `:${fontVariants}&display=swap'`;
+			document.body.insertAdjacentHTML( 'beforebegin', `<link rel='stylesheet' id="google-font-${linkId}" href='${url}' type='text/css' media='all' />`);
 		}
 
-		document.body.insertAdjacentHTML( 'beforebegin', `<link rel='stylesheet' id="google-font-${linkId}" href='${url}' type='text/css' media='all' />`);
-	}
+		let fontVariants;
+
+		if ( ! googleFonts || googleFonts.length === 0 ) {
+			fetchGoogleFonts().then( ( fonts ) => {
+				setGoogleFonts( fonts );
+				fontVariants = getWeightsForFontFamily( fonts, font );
+				fontVariants = fontVariants.join( ',' );
+				insertFontStylesheet( fontVariants );
+			});
+		} else {
+			fontVariants = getWeightsForFontFamily( googleFonts, font );
+			fontVariants = fontVariants.join( ',' );
+			insertFontStylesheet( fontVariants );
+		}
+}
 
 	loadFontCss( attributes.fontFamily );
 
@@ -291,12 +325,31 @@ function EditContainer( props ) {
 		return fontOptions[type];
 	};
 
+	const getFontWeightOptions = ( fontFamily ) => {
+		let options = [];
+		getWeightsForFontFamily( googleFonts, fontFamily ).forEach( weight => {
+			options.push( { label: weight, value: weight } );
+		});
+		return options;
+	};
+
+	const fontWeightSelector = () => {
+		return (
+			<SelectControl
+			label="Font weight"
+			value={ fontWeight }
+			onChange={ ( newWeight ) => setAttributes({ fontWeight: newWeight } )}
+			__nextHasNoMarginBottom
+			options={ getFontWeightOptions( attributes.fontFamily ) }
+			/>
+		);
+	};
+
 	const fontFamilySelector = () => {
 		return (
 			<SelectControl
 			label="Select font"
 			value={ attributes.fontFamily }
-			// options={ fontOptions }
 			onChange={ ( newFont ) => onChangeFontFamily( newFont ) }
 			__nextHasNoMarginBottom
 			>
@@ -435,10 +488,19 @@ function EditContainer( props ) {
 					<ToolsPanelItem
 						hasValue={ () => !! fontOptions }
 						label={ __( 'Font family' ) }
-						onDeselect={ () => resetFontSizes() }
+						// onDeselect={ () => resetFontSizes() }
 					>
 						<PanelBody title={ __( 'Font family', 'wp-quote-blocks' ) }>
 							{ fontFamilySelector }
+						</PanelBody>
+					</ToolsPanelItem>
+					<ToolsPanelItem
+						hasValue={ () => !! getWeightsForFontFamily( googleFonts, attributes.fontFamily ) }
+						label={ __( 'Font weight' ) }
+						// onDeselect={ () => resetFontSizes() }
+					>
+						<PanelBody title={ '' }>
+							{ fontWeightSelector }
 						</PanelBody>
 					</ToolsPanelItem>
 				</ToolsPanel>
@@ -456,7 +518,7 @@ function EditContainer( props ) {
 					<div className="wpqb__line" style={{ borderColor: linesColor }}></div>
 				)}
 				{ leftIcon }
-				<div className="quote-wrapper">
+				<div className="quote-wrapper" style={{ fontWeight }}>
 					<RichText
 						tagName="p"
 						className="quote"

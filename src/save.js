@@ -24,6 +24,7 @@ export default function save( props ) {
 		iconColor,
 		backgroundColor,
 		boxShadow,
+		fontWeight
 	} = attributes;
 
 	const iconStyles = {
@@ -71,7 +72,7 @@ export default function save( props ) {
 				<div className="wpqb__line" style={{ borderColor: attributes.linesColor }}></div>
 			)}
 			{ leftIcon }
-			<div className="quote-wrapper">
+			<div className="quote-wrapper" style={{ fontWeight }}>
 				<RichText.Content { ...blockProps } { ...useBlockProps.save( { style: { textAlign: attributes.alignment, fontSize: attributes.quoteFontSize, fontFamily: attributes.fontFamily  } } ) } tagName="p" className="quote" value={ attributes.quote } />
 				<RichText.Content { ...blockProps } { ...useBlockProps.save( { style: { textAlign: attributes.alignment, fontSize: attributes.citationFontSize, fontFamily: attributes.fontFamily } } ) } tagName="p" className="citation" value={ attributes.citation } />
 			</div>
