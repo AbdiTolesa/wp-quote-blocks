@@ -527,7 +527,7 @@ function EditContainer( props ) {
 								onClick={ () => setAttributes({class:''}) }
 							>
 								<svg xmlns="http://www.w3.org/2000/svg" fill="#000000" width="24px" height="24px" viewBox="0 0 16 16">
-									<path d="M9 6h7v10H9V6zm2 2v6h3V8h-3zM0 14h7v2H0v-2zm0-8h7v2H0V6zm0 4h7v2H0v-2zM0 0h16v4H0V0z" fill-rule="evenodd"/>
+									<path d="M9 6h7v10H9V6zm2 2v6h3V8h-3zM0 14h7v2H0v-2zm0-8h7v2H0V6zm0 4h7v2H0v-2zM0 0h16v4H0V0z" fillRule="evenodd"/>
 								</svg>
 							</button>
 						</Toolbar>

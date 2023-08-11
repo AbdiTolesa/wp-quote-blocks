@@ -1,17 +1,21 @@
+import icons from '../assets/icons/icons.js';
+
 const variations = [
     {
         name: 'default',
         title: 'Default',
         attributes: {
             class: 'default',
-        }
+        },
+        icon: icons.default,
     },
     {
         name: 'simple',
         title: 'Simple',
         attributes: {
             class: 'simple',
-        }
+        },
+        icon: icons.simple,
     },
     {
         name: 'centred',
