@@ -38,8 +38,8 @@ function wp_quote_blocks_custom_script() {
 			document.addEventListener("DOMContentLoaded", () => {
 				if ( "" !== "<?php echo ! empty($block['attrs']['fontFamily']) ? $block['attrs']['fontFamily'] : ''; ?>" ) {
 					let url = `https://fonts.googleapis.com/css?family=<?php echo $block['attrs']['fontFamily']; ?>`;
-					if ( "" !== "<?php echo ! empty($block['attrs']['fontFamily']) ? $block['attrs']['fontFamily'] : ''; ?>" ) {
-						url += ":<?php echo ! empty($block['attrs']['fontFamily']) ? $block['attrs']['fontFamily'] : ''; ?>";
+					if ( "" !== "<?php echo ! empty($block['attrs']['fontWeight']) ? $block['attrs']['fontWeight'] : ''; ?>" ) {
+						url += ":<?php echo ! empty($block['attrs']['fontWeight']) ? $block['attrs']['fontWeight'] : ''; ?>";
 					}
 					url += '&display=swap';
 
@@ -93,7 +93,23 @@ function wpqb_page_html_form() { ?>
 add_action( 'wp_ajax_get_google_api_key', 'wpqb_get_google_api_key' );
 
 function wpqb_get_google_api_key() {
-	// echo wp_json_encode( get_option( 'google_api_key' ) );
+	error_log(print_r( $_POST['_wpnonce'], true ));
+	if (!isset($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'wpqb_nonce')) {
+        die('Unauthorized!');
+    }
 	wp_send_json_success(get_option( 'google_api_key') );
-	// die();
 }
+
+function enqueue_block_assets() {
+    wp_enqueue_script(
+        'wpqb-script',
+        plugins_url('edit.js', __FILE__),
+        array('wp-blocks', 'wp-i18n', 'wp-element', 'wp-api'),
+        null
+    );
+
+    wp_localize_script('wpqb-script', 'wpqbVars', array(
+		'nonce' => wp_create_nonce('wpqb_nonce')
+	));
+}
+add_action('enqueue_block_editor_assets', 'enqueue_block_assets');

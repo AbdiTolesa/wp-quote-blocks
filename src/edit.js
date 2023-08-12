@@ -2,7 +2,6 @@ import { __ } from '@wordpress/i18n';
 import {
     createBlocksFromInnerBlocksTemplate,
 	getBlockVariations,
-	store as blocksStore,
 } from '@wordpress/blocks';
 
 import {
@@ -16,11 +15,11 @@ import {
     PanelColorSettings,
 } from '@wordpress/block-editor';
 
-import { useDispatch, useSelect } from '@wordpress/data';
+import { useDispatch } from '@wordpress/data';
 
 import './editor.scss';
 
-import { PanelBody, SelectControl, RangeControl, Button, ButtonGroup, ToggleControl, Toolbar, ToolbarButton, __experimentalRadio as Radio, __experimentalRadioGroup as RadioGroup,
+import { PanelBody, SelectControl, RangeControl, Button, ButtonGroup, ToggleControl, Toolbar,
     __experimentalToggleGroupControl as ToggleGroupControl,
     __experimentalToggleGroupControlOption as ToggleGroupControlOption,
 	__experimentalBoxControl as BoxControl,
@@ -28,9 +27,7 @@ import { PanelBody, SelectControl, RangeControl, Button, ButtonGroup, ToggleCont
     __experimentalToolsPanelItem as ToolsPanelItem,
 } from '@wordpress/components';
 
-import { useState } from '@wordpress/element';
-
-import variations from './variations';
+import { useState, useEffect } from '@wordpress/element';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -46,14 +43,13 @@ export default function Edit( props ) {
 
 	const isVariationSelected = attributes.class !== '';
     const Component = isVariationSelected
-        ? EditContainer // display the inner blocks
-        : Placeholder;  // or the variation picker
+        ? EditContainer
+        : Placeholder;
 
     return <Component { ...props } />;
 }
 
 function Placeholder( { clientId, setAttributes } ) {
-    const { replaceInnerBlocks } = useDispatch( blockEditorStore );
     const blockProps = useBlockProps();
 
 	const variations = getBlockVariations( 'create-block/wp-quote-blocks' );
@@ -70,23 +66,6 @@ function Placeholder( { clientId, setAttributes } ) {
                     if ( variation.attributes ) {
                         setAttributes( variation.attributes );
                     }
-                    if ( false && variation.innerBlocks ) {
-						const blocks = [
-							<RichText
-							placeholder={
-								// translators: placeholder text used for the quote
-								__( 'Add quote' )
-							} />
-						];
-                        replaceInnerBlocks(
-                            clientId,
-							createBlocksFromInnerBlocksTemplate( blocks ),
-                            // createBlocksFromInnerBlocksTemplate(
-                            //     variation.innerBlocks
-                            // ),
-                            true
-                        );
-                    }
                 } }
             />
         </div>
@@ -95,9 +74,11 @@ function Placeholder( { clientId, setAttributes } ) {
 
 function EditContainer( props ) {
 	const { attributes, setAttributes } = props;
-	let leftIcon = null, rightIcon = null;
+	const [ fontOptions, setFontOptions ] = useState('');
+	const [ googleFonts, setGoogleFonts ] = useState( {} );
+	const [ fontWeights, setFontWeights ] = useState( [] );
 
-    const blockProps = useBlockProps();
+	let leftIcon = null, rightIcon = null;
 
 	const {
 		iconSize,
@@ -109,14 +90,95 @@ function EditContainer( props ) {
 		fontWeight,
 	} = attributes;
 
-	const onChangeIconSize = ( size ) => {
-		setAttributes( { iconSize: size + 'px' } );
+	const getGooglApiKey = async function() {
+		let apiKey = '';
+		await wp.ajax.post( 'get_google_api_key', {
+			_wpnonce: wpqbVars.nonce,
+			action: 'get_google_api_key',
+		}).done(function(response) {
+			apiKey = response;
+		});
+
+		return apiKey;
+	}
+
+	const fetchSystemFonts = () => {
+		const fontFaces = [...document.fonts.values()];
+		const families = fontFaces.map(font => font.family);
+		return [...new Set(families)];
 	};
 
-	const iconStyles = {
-		width: iconSize,
-		height: iconSize,
-		fill: iconColor,
+	const loadFontCss = async ( googleFonts, font ) => {
+		const linkId = font.replace(/ /g, '+');
+		if ( fetchSystemFonts().includes( font ) || ! font || document.getElementById( `google-font-${linkId}` ) ) {
+			return;
+		}
+		let url = `https://fonts.googleapis.com/css?family=${font}`;
+
+		const insertFontStylesheet = ( fontVariants ) => {
+			url += `:${fontVariants}&display=swap'`;
+			document.body.insertAdjacentHTML( 'beforebegin', `<link rel='stylesheet' id="google-font-${linkId}" href='${url}' type='text/css' media='all' />`);
+		}
+
+		let fontVariants;
+		getWeightsForFontFamily( googleFonts, font ).then( ( weights ) => {
+			fontVariants = weights.join( ',' );
+			insertFontStylesheet( fontVariants );
+		});
+	}
+
+	const fetchGoogleFonts = async () => {
+		if ( googleFonts && Object.keys(googleFonts).length !== 0 ) {
+			return googleFonts;
+		}
+		console.log('FETCHING GOOGLE FONTS');
+
+		const KEY = await getGooglApiKey();
+		const url = `https://www.googleapis.com/webfonts/v1/webfonts?key=${KEY}`;
+		const response = await fetch( url );
+		const fonts = await response.json();
+		setGoogleFonts( fonts );
+		return fonts;
+	};
+
+	const getFontOptions = ( googleFonts ) => {
+		if ( fontOptions ) {
+			return;
+		}
+
+		let options = { system: [], google: [] };
+		let systemFonts = fetchSystemFonts();
+		systemFonts.forEach( font => {
+			options.system.push( { label: font, value: font } );
+		});
+
+		googleFonts.items.forEach( font => {
+			options.google.push( { label: font.family, value: font.family } );
+		});
+		setFontOptions( {...options} );
+	};
+
+	const updateFontWeightOptions = ( weights ) => {
+		let options = [];
+		weights.forEach( weight => {
+			options.push( { label: weight, value: weight } );
+		});
+		setFontWeights( options );
+	};
+
+	useEffect( () => {
+		fetchGoogleFonts().then( fonts => {
+			loadFontCss( fonts, attributes.fontFamily );
+			getWeightsForFontFamily( fonts, attributes.fontFamily ).then( ( weights ) => {
+				updateFontWeightOptions( weights );
+			});
+			getFontOptions( fonts );
+		});
+	}, []);
+
+
+	const onChangeIconSize = ( size ) => {
+		setAttributes( { iconSize: size + 'px' } );
 	};
 
 	const onChangeIconColor = ( color ) => {
@@ -129,6 +191,28 @@ function EditContainer( props ) {
 
 	const onChangeLinesColor = ( newColor ) => {
 		setAttributes( { linesColor: newColor } );
+	};
+
+	const onChangeAlignment = ( newAlignment ) => {
+		setAttributes( { alignment: newAlignment === undefined ? 'none' : newAlignment } );
+	};
+
+	const onChangeQuoteFontSize = ( val ) => {
+		setAttributes( { quoteFontSize: val } );
+	};
+
+	const onChangeCitationFontSize = ( val ) => {
+		setAttributes( { citationFontSize: val } );
+	};
+
+	const onChangeBoxShadow = ( newShadow ) => {
+		setAttributes( { boxShadow: parseInt( newShadow ) });
+	};
+
+	const iconStyles = {
+		width: iconSize,
+		height: iconSize,
+		fill: iconColor,
 	};
 
 	const colorSettingsDropDown = [
@@ -175,84 +259,11 @@ function EditContainer( props ) {
 		return svg;
 	}
 
-	const onChangeAlignment = ( newAlignment ) => {
-		setAttributes( {
-			alignment: newAlignment === undefined ? 'none' : newAlignment,
-		} );
-	};
-
-	const onChangeQuoteFontSize = ( val ) => {
-		setAttributes( { quoteFontSize: val } );
-	};
-
-	const onChangeCitationFontSize = ( val ) => {
-		setAttributes( { citationFontSize: val } );
-	};
-
-	const onChangeBoxShadow = ( newShadow ) => {
-		setAttributes( { boxShadow: parseInt( newShadow ) });
-	};
-
 	const resetFontSizes = () => {
 		setAttributes( { quoteFontSize: '1rem', citationFontSize: '0.75rem' } );
 	};
 
-	const fetchGoogleFonts = async () => {
-		const KEY = await getGooglApiKey();
-		const url = `https://www.googleapis.com/webfonts/v1/webfonts?key=${KEY}`;
-		const response = await fetch( url );
-		const fonts = await response.json();
-
-		return fonts;
-	};
-
-	const getGooglApiKey = async function() {
-		let apiKey = '';
-		const apiRequest = wp.ajax.post( 'get_google_api_key', {
-			// _wpnonce: 'customBlockData.nonce',
-			action: 'get_google_api_key',
-		});
-
-		apiKey = await apiRequest.done(function(response) {
-			return Promise.resolve( response );
-		});
-
-		return Promise.resolve( apiKey );
-	}
-
-	
-	const [ fontOptions, setFontOptions ] = useState('');
-
-	const [ googleFonts, setGoogleFonts ] = useState( [] );
-
-	const getFontOptions = () => {
-		if ( fontOptions ) {
-			return;
-		}
-
-		let options = { system: [], google: [] };
-		let systemFonts = fetchSystemFonts();
-		systemFonts.forEach( font => {
-			options.system.push( { label: font, value: font } );
-		});
-
-		fetchGoogleFonts().then( ( fonts ) => {
-			setGoogleFonts( fonts );
-			fonts.items.forEach( font => {
-				options.google.push( { label: font.family, value: font.family } );
-			});
-			setFontOptions( {...options} );
-		});
-		
-	};
-
-	const fetchSystemFonts = () => {
-			const fontFaces = [...document.fonts.values()];
-			const families = fontFaces.map(font => font.family);
-			return [...new Set(families)];
-	};
-
-	const getWeightsForFontFamily = async ( fontFamily )  => {
+	const getWeightsForFontFamily = async ( googleFonts, fontFamily )  => {
 		let fonts = googleFonts;
 		if ( ! fonts || fonts.length === 0 ) {
 			await fetchGoogleFonts().then( ( googleFonts ) => {
@@ -274,68 +285,37 @@ function EditContainer( props ) {
 		});
 
 		variants = variants.filter( variant => variant !== null );
+
 		return [...new Set( variants )];
 	};
 
 	const onChangeFontFamily = ( newFont ) => {
 		setAttributes( { fontFamily: newFont } );
-		loadFontCss( newFont );
-		let fontFamilyWeights = []
-		getWeightsForFontFamily( newFont ).then( ( weights ) => {
-			fontFamilyWeights = weights;
-		});
-		if ( ! fontFamilyWeights.includes( attributes.fontFamily ) ) {
-			if ( fontFamilyWeights.length === 0 ) {
-				setAttributes( { fontWeight: '' } );
-			} else {
-				setAttributes( { fontWeight: fontFamilyWeights[0] } );
+		loadFontCss( googleFonts, newFont );
+		getWeightsForFontFamily( googleFonts, newFont ).then( ( weights ) => {
+			updateFontWeightOptions( weights );
+			if ( ! weights.includes( parseInt( attributes.fontWeight ) ) ) {
+				if ( weights.length === 0 ) {
+					setAttributes( { fontWeight: '' } );
+				} else {
+					setAttributes( { fontWeight: weights[0] } );
+				}
 			}
-		}
-	};
-
-	const loadFontCss = async ( font ) => {
-		const linkId = font.replace(/ /g, '+');
-		if ( fetchSystemFonts().includes( font ) || ! font || document.getElementById( `google-font-${linkId}` ) ) {
-			return;
-		}
-		let url = `https://fonts.googleapis.com/css?family=${font}`;
-
-		const insertFontStylesheet = ( fontVariants ) => {
-			url += `:${fontVariants}&display=swap'`;
-			document.body.insertAdjacentHTML( 'beforebegin', `<link rel='stylesheet' id="google-font-${linkId}" href='${url}' type='text/css' media='all' />`);
-		}
-
-		let fontVariants;
-		getWeightsForFontFamily( font ).then( ( weights ) => {
-			fontVariants = weights.join( ',' );
-			insertFontStylesheet( fontVariants );
 		});
-}
-
-	loadFontCss( attributes.fontFamily );
-
-	getFontOptions();
+	};
 
 	const blockStyles = {
 		backgroundColor,
 		boxShadow: Math.max( (boxShadow - 10), 0 ) + 'px ' + Math.max( (boxShadow - 5), 0 ) + 'px ' + boxShadow + 'px ' + Math.max(boxShadow - 7, 0) + 'px ' + 'rgba(0,0,0,0.2)',
 	};
 
-	const getFonts = ( type ) => {
-		return fontOptions[type];
+	const quoteTextsStyle = {
+		textAlign: attributes.alignment ? attributes.alignment : 'inherit',
+		fontFamily: `"${attributes.fontFamily}", Sans-serif`
 	};
 
-	const getFontWeightOptions = ( fontFamily ) => {
-		let options = [];
-		if ( '' === fontFamily ) {
-			return options;
-		}
-		getWeightsForFontFamily( fontFamily ).then( ( weights ) => {
-			weights.forEach( weight => {
-				options.push( { label: weight, value: weight } );
-			});
-		});
-		return options;
+	const getFonts = ( type ) => {
+		return fontOptions[type];
 	};
 
 	const fontWeightSelector = () => {
@@ -345,7 +325,7 @@ function EditContainer( props ) {
 			value={ fontWeight }
 			onChange={ ( newWeight ) => setAttributes({ fontWeight: newWeight } )}
 			__nextHasNoMarginBottom
-			options={ getFontWeightOptions( attributes.fontFamily ) }
+			options={ fontWeights }
 			/>
 		);
 	};
@@ -380,7 +360,7 @@ function EditContainer( props ) {
 
 	leftIcon = (
 		<div className="quote-icon">
-			<svg xlmns="http://www.w3.org/2000/svg" viewBox={iconSVG.getAttribute( 'viewBox' )} { ...useBlockProps( { style: iconStyles } ) } dangerouslySetInnerHTML={{__html: iconSVG.innerHTML}} />
+			<svg xlmns="http://www.w3.org/2000/svg" viewBox={iconSVG.getAttribute( 'viewBox' )} style={iconStyles} dangerouslySetInnerHTML={{__html: iconSVG.innerHTML}} />
 		</div>
 	);
 
@@ -555,7 +535,7 @@ function EditContainer( props ) {
 					<RichText
 						tagName="p"
 						className="quote"
-						style={ { textAlign: attributes.alignment ? attributes.alignment : 'inherit', fontSize: attributes.quoteFontSize, fontFamily: attributes.fontFamily } }
+						style={ { ...quoteTextsStyle, fontSize: attributes.quoteFontSize } }
 						value={ attributes.quote }
 						onChange={ ( quote ) => setAttributes( { quote } ) }
 						placeholder={ __( 'Add quote...' ) }
@@ -563,7 +543,7 @@ function EditContainer( props ) {
 					<RichText
 						tagName="p"
 						className="citation"
-						style={ { textAlign: attributes.alignment ? attributes.alignment : 'inherit', fontSize: attributes.citationFontSize, fontFamily: attributes.fontFamily } }
+						style={ { ...quoteTextsStyle, fontSize: attributes.citationFontSize } }
 						value={ attributes.citation }
 						onChange={ ( citation ) => setAttributes( { citation } ) }
 						placeholder={ __( 'Add citation...' ) }
