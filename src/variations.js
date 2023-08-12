@@ -22,21 +22,24 @@ const variations = [
         title: 'Centered',
         attributes: {
             class: 'centred',
-        }
+        },
+        icon: icons.centred,
     },
     {
         name: 'closed',
         title: 'Closed',
         attributes: {
             class: 'closed',
-        }
+        },
+        icon: icons.closed,
     },
     {
         name: 'block-quotation',
         title: 'Block quotation',
         attributes: {
             class: 'block-quotation',
-        }
+        },
+        icon: icons.blockQuotation,
     }
 ];
 

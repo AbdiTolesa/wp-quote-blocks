@@ -59,6 +59,10 @@
 .quote-variation-closed .quote-right-icon {
   display: flex;
   justify-content: flex-end;
+  margin-top: -2rem;
+}
+.quote-variation-closed .quote-icon {
+  margin-bottom: -2rem;
 }
 
 .wp-quote-icons__options button svg {
