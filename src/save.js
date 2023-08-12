@@ -66,13 +66,19 @@ export default function save( props ) {
 		boxShadow: Math.max( (boxShadow - 10), 0 ) + 'px ' + Math.max( (boxShadow - 5), 0 ) + 'px ' + boxShadow + 'px ' + Math.max(boxShadow-7, 0) + 'px ' + 'rgba(0,0,0,0.2)'
 	};
 
+	const quoteWrapperStyles = {
+		fontWeight,
+		margin:`${( attributes.margin.top || '0' ) + ' ' + ( attributes.margin.right || '0' ) + ' ' + ( attributes.margin.bottom || '0' ) + ' ' + ( attributes.margin.left || '0' )}`,
+		padding:`${( attributes.padding.top || '0' ) + ' ' + ( attributes.padding.right || '0' ) + ' ' + ( attributes.padding.bottom || '0' ) + ' ' + ( attributes.padding.left || '0' )}`
+	};
+
 	return (
         <div { ...useBlockProps.save( { style: blockStyles, className: `wp-quote-blocks quote-variation-${attributes.class}` } ) }>
 			{ attributes.showLines && (
 				<div className="wpqb__line" style={{ borderColor: attributes.linesColor }}></div>
 			)}
 			{ leftIcon }
-			<div className="quote-wrapper" style={{ fontWeight }}>
+			<div className="quote-wrapper" style={quoteWrapperStyles}>
 				<RichText.Content
 				style={ { textAlign: attributes.alignment ? attributes.alignment : 'inherit', fontSize: attributes.quoteFontSize, fontFamily: attributes.fontFamily } }
  				tagName="p"

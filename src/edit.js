@@ -7,10 +7,8 @@ import {
 
 import {
     useBlockProps,
-    useInnerBlocksProps,
     store as blockEditorStore,
     __experimentalBlockVariationPicker as BlockVariationPicker,
-    AlignmentControl,
 	AlignmentToolbar,
 	RichText,
 	BlockControls,
@@ -28,7 +26,6 @@ import { PanelBody, SelectControl, RangeControl, Button, ButtonGroup, ToggleCont
 	__experimentalBoxControl as BoxControl,
     __experimentalToolsPanel as ToolsPanel,
     __experimentalToolsPanelItem as ToolsPanelItem,
-    __experimentalUnitControl as UnitControl,
 } from '@wordpress/components';
 
 import { useState } from '@wordpress/element';
@@ -395,10 +392,27 @@ function EditContainer( props ) {
 		);
 	}
 
+	const quoteWrapperStyles = {
+		fontWeight,
+		margin:`${( attributes.margin.top || '0' ) + ' ' + ( attributes.margin.right || '0' ) + ' ' + ( attributes.margin.bottom || '0' ) + ' ' + ( attributes.margin.left || '0' )}`,
+		padding:`${( attributes.padding.top || '0' ) + ' ' + ( attributes.padding.right || '0' ) + ' ' + ( attributes.padding.bottom || '0' ) + ' ' + ( attributes.padding.left || '0' )}`
+	};
+
     return (
 		<>
 		    <InspectorControls>
 				<PanelBody title={ __( 'General', 'wp-quote-blocks' ) }>
+					<BoxControl
+						label="Quote margin"
+						values={ attributes.margin }
+						onChange={ ( nextValues ) => setAttributes({ margin: nextValues }) }
+						inputProps={{ min: -300 }}
+					/>
+					<BoxControl
+						label="Quote padding"
+						values={ attributes.padding }
+						onChange={ ( nextValues ) => setAttributes({ padding: nextValues }) }
+					/>
 					<RangeControl
 							label={ __( 'Shadow', 'wp-quote-blocks' ) }
 							value={ parseInt( boxShadow ) }
@@ -537,7 +551,7 @@ function EditContainer( props ) {
 					<div className="wpqb__line" style={{ borderColor: linesColor }}></div>
 				)}
 				{ leftIcon }
-				<div className="quote-wrapper" style={{ fontWeight }}>
+				<div className="quote-wrapper" style={quoteWrapperStyles}>
 					<RichText
 						tagName="p"
 						className="quote"

@@ -71,6 +71,24 @@
     "linesColor": {
       "type": "string",
       "default": "#ABABAB"
+    },
+    "margin": {
+      "type": "object",
+      "default": {
+        "top": "0",
+        "left": "0",
+        "right": "0",
+        "bottom": "0"
+      }
+    },
+    "padding": {
+      "type": "object",
+      "default": {
+        "top": "0",
+        "left": "0",
+        "right": "0",
+        "bottom": "0"
+      }
     }
   },
   "supports": {
