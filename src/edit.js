@@ -167,12 +167,12 @@ function EditContainer( props ) {
 	};
 
 	useEffect( () => {
-		fetchGoogleFonts().then( fonts => {
-			loadFontCss( fonts, attributes.fontFamily );
-			getWeightsForFontFamily( fonts, attributes.fontFamily ).then( ( weights ) => {
+		fetchGoogleFonts().then( googleFonts => {
+			loadFontCss( googleFonts, attributes.fontFamily );
+			getWeightsForFontFamily( googleFonts, attributes.fontFamily ).then( ( weights ) => {
 				updateFontWeightOptions( weights );
 			});
-			getFontOptions( fonts );
+			getFontOptions( googleFonts );
 		});
 	}, []);
 

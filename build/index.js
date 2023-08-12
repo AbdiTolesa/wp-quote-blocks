@@ -510,12 +510,12 @@ function EditContainer(props) {
     setFontWeights(options);
   };
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    fetchGoogleFonts().then(fonts => {
-      loadFontCss(fonts, attributes.fontFamily);
-      getWeightsForFontFamily(fonts, attributes.fontFamily).then(weights => {
+    fetchGoogleFonts().then(googleFonts => {
+      loadFontCss(googleFonts, attributes.fontFamily);
+      getWeightsForFontFamily(googleFonts, attributes.fontFamily).then(weights => {
         updateFontWeightOptions(weights);
       });
-      getFontOptions(fonts);
+      getFontOptions(googleFonts);
     });
   }, []);
   const onChangeIconSize = size => {
