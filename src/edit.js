@@ -316,7 +316,6 @@ function EditContainer( props ) {
 
 	const quoteTextsStyle = {
 		textAlign: attributes.alignment ? attributes.alignment : 'inherit',
-		fontFamily: `"${attributes.fontFamily}", Sans-serif`
 	};
 
 	const getFonts = ( type ) => {
@@ -364,7 +363,11 @@ function EditContainer( props ) {
 	const iconSVG = svgElementFromString( attributes.icon );
 
 	leftIcon = (
-		<div className="quote-icon">
+		<div className="quote-icon" style={{
+			filter: attributes.iconShadow ? `drop-shadow(10px 5px ${attributes.iconShadow}px rgba(0, 0, 0, 0.3))` : 'none',
+			margin:`${( attributes.iconMargin.top || '0' ) + ' ' + ( attributes.iconMargin.right || '0' ) + ' ' + ( attributes.iconMargin.bottom || '0' ) + ' ' + ( attributes.iconMargin.left || '0' )}`,
+			padding:`${( attributes.iconPadding.top || '0' ) + ' ' + ( attributes.iconPadding.right || '0' ) + ' ' + ( attributes.iconPadding.bottom || '0' ) + ' ' + ( attributes.iconPadding.left || '0' )}`
+		}}>
 			<svg xlmns="http://www.w3.org/2000/svg" viewBox={iconSVG.getAttribute( 'viewBox' )} style={iconStyles} dangerouslySetInnerHTML={{__html: iconSVG.innerHTML}} />
 		</div>
 	);
@@ -378,7 +381,6 @@ function EditContainer( props ) {
 	}
 
 	const quoteWrapperStyles = {
-		fontWeight,
 		margin:`${( attributes.margin.top || '0' ) + ' ' + ( attributes.margin.right || '0' ) + ' ' + ( attributes.margin.bottom || '0' ) + ' ' + ( attributes.margin.left || '0' )}`,
 		padding:`${( attributes.padding.top || '0' ) + ' ' + ( attributes.padding.right || '0' ) + ' ' + ( attributes.padding.bottom || '0' ) + ' ' + ( attributes.padding.left || '0' )}`
 	};
@@ -427,6 +429,14 @@ function EditContainer( props ) {
                         min={ 1 }
                         max={ 200 }
                     />
+					<RangeControl
+							label={ __( 'Shadow', 'wp-quote-blocks' ) }
+							value={ parseInt( attributes.iconShadow ) }
+							onChange={ ( newShadow ) => setAttributes( { iconShadow: parseInt( newShadow )} ) }
+							step="1"
+							min={ 0 }
+							max={ 20 }
+					/>
 					<ButtonGroup className="wp-quote-icons__options">
 						<Button variant={ attributes.icon === icons[0] ? 'primary': 'secondary' } onClick={() => setAttributes({ icon: icons[0]})}>
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M10.3 24.8V26H20v16.9H0V26.2C0 13.4 6.6 7.1 19.9 7.1v7.1c-3.4.5-5.9 1.6-7.4 3.3-1.5 1.7-2.2 4.1-2.2 7.3zm30 0V26H50v16.9H30.1V26.2c0-12.7 6.6-19.1 19.9-19.1v7.1c-6.4.7-9.7 4.3-9.7 10.6z"></path></svg>
@@ -461,8 +471,18 @@ function EditContainer( props ) {
 						<Button variant={ attributes.icon === icons[10] ? 'primary': 'secondary' } onClick={() => setAttributes({ icon: icons[10]})}>
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M280,185.143V416H496V16H457.6ZM464,384H312V198.857L464,54.1Z"/><path d="M232,16H193.6L16,185.143V416H232ZM200,384H48V198.857L200,54.1Z"/></svg>
 						</Button>
-
 					</ButtonGroup>
+					<BoxControl
+						label="Margin"
+						values={ attributes.margin }
+						onChange={ ( nextValues ) => setAttributes({ iconMargin: nextValues }) }
+						inputProps={{ min: -300 }}
+					/>
+					<BoxControl
+						label="Padding"
+						values={ attributes.padding }
+						onChange={ ( nextValues ) => setAttributes({ iconPadding: nextValues }) }
+					/>
 				</PanelBody>
 				<PanelColorSettings
                     title={ __( 'Color settings', 'wp-quote-blocks' ) }
@@ -495,7 +515,7 @@ function EditContainer( props ) {
 					<ToolsPanelItem
 						hasValue={ () => !! fontOptions }
 						label={ __( 'Font family' ) }
-						// onDeselect={ () => resetFontSizes() }
+						onDeselect={ () => setAttributes( { fontFamily: 'Sans-serif'} ) }
 					>
 						<PanelBody title={ __( 'Font family', 'wp-quote-blocks' ) }>
 							{ fontFamilySelector }
@@ -504,7 +524,6 @@ function EditContainer( props ) {
 					<ToolsPanelItem
 						hasValue={ () => true }
 						label={ __( 'Font weight' ) }
-						// onDeselect={ () => resetFontSizes() }
 					>
 						<PanelBody title={ '' }>
 							{ fontWeightSelector }
@@ -540,7 +559,7 @@ function EditContainer( props ) {
 					<RichText
 						tagName="p"
 						className="quote"
-						style={ { ...quoteTextsStyle, fontSize: attributes.quoteFontSize } }
+						style={ { ...quoteTextsStyle, fontWeight, fontFamily: `"${attributes.fontFamily}", Sans-serif`, fontSize: attributes.quoteFontSize } }
 						value={ attributes.quote }
 						onChange={ ( quote ) => setAttributes( { quote } ) }
 						placeholder={ __( 'Add quote...' ) }

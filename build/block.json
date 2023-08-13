@@ -64,6 +64,28 @@
       "type": "integer",
       "default": 0
     },
+    "iconShadow": {
+      "type": "integer",
+      "default": 0
+    },
+    "iconMargin": {
+      "type": "object",
+      "default": {
+        "top": "0",
+        "left": "0",
+        "right": "0",
+        "bottom": "0"
+      }
+    },
+    "iconPadding": {
+      "type": "object",
+      "default": {
+        "top": "0",
+        "left": "0",
+        "right": "0",
+        "bottom": "0"
+      }
+    },
     "showLines": {
       "type": "boolean",
       "default": false

@@ -48,7 +48,11 @@ export default function save( props ) {
 	const iconSVG = svgElementFromString( attributes.icon );
 
 	leftIcon = (
-		<div className="quote-icon">
+		<div className="quote-icon" style={{
+			filter: attributes.iconShadow ? `drop-shadow(10px 5px ${attributes.iconShadow}px rgba(0, 0, 0, 0.3))` : 'none',
+			margin:`${( attributes.iconMargin.top || '0' ) + ' ' + ( attributes.iconMargin.right || '0' ) + ' ' + ( attributes.iconMargin.bottom || '0' ) + ' ' + ( attributes.iconMargin.left || '0' )}`,
+			padding:`${( attributes.iconPadding.top || '0' ) + ' ' + ( attributes.iconPadding.right || '0' ) + ' ' + ( attributes.iconPadding.bottom || '0' ) + ' ' + ( attributes.iconPadding.left || '0' )}`
+		}}>
 			<svg xlmns="http://www.w3.org/2000/svg" viewBox={iconSVG.getAttribute( 'viewBox' )} style={iconStyles} dangerouslySetInnerHTML={{__html: iconSVG.innerHTML}} />
 		</div>
 	);
@@ -68,11 +72,9 @@ export default function save( props ) {
 
 	const quoteTextsStyle = {
 		textAlign: attributes.alignment ? attributes.alignment : 'inherit',
-		fontFamily: `"${attributes.fontFamily}", Sans-serif`
 	};
 
 	const quoteWrapperStyles = {
-		fontWeight,
 		margin:`${( attributes.margin.top || '0' ) + ' ' + ( attributes.margin.right || '0' ) + ' ' + ( attributes.margin.bottom || '0' ) + ' ' + ( attributes.margin.left || '0' )}`,
 		padding:`${( attributes.padding.top || '0' ) + ' ' + ( attributes.padding.right || '0' ) + ' ' + ( attributes.padding.bottom || '0' ) + ' ' + ( attributes.padding.left || '0' )}`
 	};
@@ -85,7 +87,7 @@ export default function save( props ) {
 			{ leftIcon }
 			<div className="quote-wrapper" style={quoteWrapperStyles}>
 				<RichText.Content
-				style={ { ...quoteTextsStyle, fontSize: attributes.quoteFontSize } }
+				style={ { ...quoteTextsStyle, fontWeight, fontFamily: `"${attributes.fontFamily}", Sans-serif`, fontSize: attributes.quoteFontSize } }
  				tagName="p"
 				className="quote"
 				value={ attributes.quote }

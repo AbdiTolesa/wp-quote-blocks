@@ -645,8 +645,7 @@ function EditContainer(props) {
     boxShadow: Math.max(boxShadow - 10, 0) + 'px ' + Math.max(boxShadow - 5, 0) + 'px ' + boxShadow + 'px ' + Math.max(boxShadow - 7, 0) + 'px ' + 'rgba(0,0,0,0.2)'
   };
   const quoteTextsStyle = {
-    textAlign: attributes.alignment ? attributes.alignment : 'inherit',
-    fontFamily: `"${attributes.fontFamily}", Sans-serif`
+    textAlign: attributes.alignment ? attributes.alignment : 'inherit'
   };
   const getFonts = type => {
     return fontOptions[type];
@@ -682,7 +681,12 @@ function EditContainer(props) {
   };
   const iconSVG = svgElementFromString(attributes.icon);
   leftIcon = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "quote-icon"
+    className: "quote-icon",
+    style: {
+      filter: attributes.iconShadow ? `drop-shadow(10px 5px ${attributes.iconShadow}px rgba(0, 0, 0, 0.3))` : 'none',
+      margin: `${(attributes.iconMargin.top || '0') + ' ' + (attributes.iconMargin.right || '0') + ' ' + (attributes.iconMargin.bottom || '0') + ' ' + (attributes.iconMargin.left || '0')}`,
+      padding: `${(attributes.iconPadding.top || '0') + ' ' + (attributes.iconPadding.right || '0') + ' ' + (attributes.iconPadding.bottom || '0') + ' ' + (attributes.iconPadding.left || '0')}`
+    }
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("svg", {
     xlmns: "http://www.w3.org/2000/svg",
     viewBox: iconSVG.getAttribute('viewBox'),
@@ -707,7 +711,6 @@ function EditContainer(props) {
     }));
   }
   const quoteWrapperStyles = {
-    fontWeight,
     margin: `${(attributes.margin.top || '0') + ' ' + (attributes.margin.right || '0') + ' ' + (attributes.margin.bottom || '0') + ' ' + (attributes.margin.left || '0')}`,
     padding: `${(attributes.padding.top || '0') + ' ' + (attributes.padding.right || '0') + ' ' + (attributes.padding.bottom || '0') + ' ' + (attributes.padding.left || '0')}`
   };
@@ -752,6 +755,15 @@ function EditContainer(props) {
     onChange: onChangeIconSize,
     min: 1,
     max: 200
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.RangeControl, {
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Shadow', 'wp-quote-blocks'),
+    value: parseInt(attributes.iconShadow),
+    onChange: newShadow => setAttributes({
+      iconShadow: parseInt(newShadow)
+    }),
+    step: "1",
+    min: 0,
+    max: 20
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.ButtonGroup, {
     className: "wp-quote-icons__options"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
@@ -869,7 +881,22 @@ function EditContainer(props) {
     d: "M280,185.143V416H496V16H457.6ZM464,384H312V198.857L464,54.1Z"
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("path", {
     d: "M232,16H193.6L16,185.143V416H232ZM200,384H48V198.857L200,54.1Z"
-  }))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.PanelColorSettings, {
+  })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.__experimentalBoxControl, {
+    label: "Margin",
+    values: attributes.margin,
+    onChange: nextValues => setAttributes({
+      iconMargin: nextValues
+    }),
+    inputProps: {
+      min: -300
+    }
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.__experimentalBoxControl, {
+    label: "Padding",
+    values: attributes.padding,
+    onChange: nextValues => setAttributes({
+      iconPadding: nextValues
+    })
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.PanelColorSettings, {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Color settings', 'wp-quote-blocks'),
     initialOpen: false,
     colorSettings: colorSettingsDropDown
@@ -923,14 +950,15 @@ function EditContainer(props) {
     label: "XXL"
   })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.__experimentalToolsPanelItem, {
     hasValue: () => !!fontOptions,
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Font family')
-    // onDeselect={ () => resetFontSizes() }
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Font family'),
+    onDeselect: () => setAttributes({
+      fontFamily: 'Sans-serif'
+    })
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.PanelBody, {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Font family', 'wp-quote-blocks')
   }, fontFamilySelector)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.__experimentalToolsPanelItem, {
     hasValue: () => true,
     label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Font weight')
-    // onDeselect={ () => resetFontSizes() }
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.PanelBody, {
     title: ''
   }, fontWeightSelector)))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -969,6 +997,8 @@ function EditContainer(props) {
     className: "quote",
     style: {
       ...quoteTextsStyle,
+      fontWeight,
+      fontFamily: `"${attributes.fontFamily}", Sans-serif`,
       fontSize: attributes.quoteFontSize
     },
     value: attributes.quote,
@@ -1108,7 +1138,12 @@ function save(props) {
   };
   const iconSVG = svgElementFromString(attributes.icon);
   leftIcon = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "quote-icon"
+    className: "quote-icon",
+    style: {
+      filter: attributes.iconShadow ? `drop-shadow(10px 5px ${attributes.iconShadow}px rgba(0, 0, 0, 0.3))` : 'none',
+      margin: `${(attributes.iconMargin.top || '0') + ' ' + (attributes.iconMargin.right || '0') + ' ' + (attributes.iconMargin.bottom || '0') + ' ' + (attributes.iconMargin.left || '0')}`,
+      padding: `${(attributes.iconPadding.top || '0') + ' ' + (attributes.iconPadding.right || '0') + ' ' + (attributes.iconPadding.bottom || '0') + ' ' + (attributes.iconPadding.left || '0')}`
+    }
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("svg", {
     xlmns: "http://www.w3.org/2000/svg",
     viewBox: iconSVG.getAttribute('viewBox'),
@@ -1139,11 +1174,9 @@ function save(props) {
     boxShadow: Math.max(boxShadow - 10, 0) + 'px ' + Math.max(boxShadow - 5, 0) + 'px ' + boxShadow + 'px ' + Math.max(boxShadow - 7, 0) + 'px ' + 'rgba(0,0,0,0.2)'
   };
   const quoteTextsStyle = {
-    textAlign: attributes.alignment ? attributes.alignment : 'inherit',
-    fontFamily: `"${attributes.fontFamily}", Sans-serif`
+    textAlign: attributes.alignment ? attributes.alignment : 'inherit'
   };
   const quoteWrapperStyles = {
-    fontWeight,
     margin: `${(attributes.margin.top || '0') + ' ' + (attributes.margin.right || '0') + ' ' + (attributes.margin.bottom || '0') + ' ' + (attributes.margin.left || '0')}`,
     padding: `${(attributes.padding.top || '0') + ' ' + (attributes.padding.right || '0') + ' ' + (attributes.padding.bottom || '0') + ' ' + (attributes.padding.left || '0')}`
   };
@@ -1163,6 +1196,8 @@ function save(props) {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText.Content, {
     style: {
       ...quoteTextsStyle,
+      fontWeight,
+      fontFamily: `"${attributes.fontFamily}", Sans-serif`,
       fontSize: attributes.quoteFontSize
     },
     tagName: "p",
@@ -1328,7 +1363,7 @@ module.exports = window["wp"]["i18n"];
   \************************/
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/wp-quote-blocks","version":"0.1.0","title":"WP Quote Blocks","category":"widgets","icon":"format-quote","description":"Collection of a load of Quote styles.","attributes":{"align":{"type":"string","default":"left"},"class":{"type":"string","default":""},"quote":{"type":"string","default":""},"citation":{"type":"string","default":""},"iconSize":{"type":"string","default":"30px"},"iconColor":{"type":"string","default":"#000000"},"backgroundColor":{"type":"string","default":"#ffffff"},"icon":{"type":"string","default":"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 50 50\\"><path d=\\"M10.3 24.8V26H20v16.9H0V26.2C0 13.4 6.6 7.1 19.9 7.1v7.1c-3.4.5-5.9 1.6-7.4 3.3-1.5 1.7-2.2 4.1-2.2 7.3zm30 0V26H50v16.9H30.1V26.2c0-12.7 6.6-19.1 19.9-19.1v7.1c-6.4.7-9.7 4.3-9.7 10.6z\\"></path></svg>"},"alignment":{"type":"string","default":""},"quoteFontSize":{"type":"string","default":"1rem"},"citationFontSize":{"type":"string","default":"0.75rem"},"fontFamily":{"type":"string","default":""},"fontWeight":{"type":"string","default":""},"boxShadow":{"type":"integer","default":0},"showLines":{"type":"boolean","default":false},"linesColor":{"type":"string","default":"#ABABAB"},"margin":{"type":"object","default":{"top":"0","left":"0","right":"0","bottom":"0"}},"padding":{"type":"object","default":{"top":"0","left":"0","right":"0","bottom":"0"}}},"supports":{"html":false,"align":["wide","full"],"typography":{"lineHeight":true}},"textdomain":"wp-quote-blocks","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css"}');
+module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/wp-quote-blocks","version":"0.1.0","title":"WP Quote Blocks","category":"widgets","icon":"format-quote","description":"Collection of a load of Quote styles.","attributes":{"align":{"type":"string","default":"left"},"class":{"type":"string","default":""},"quote":{"type":"string","default":""},"citation":{"type":"string","default":""},"iconSize":{"type":"string","default":"30px"},"iconColor":{"type":"string","default":"#000000"},"backgroundColor":{"type":"string","default":"#ffffff"},"icon":{"type":"string","default":"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 50 50\\"><path d=\\"M10.3 24.8V26H20v16.9H0V26.2C0 13.4 6.6 7.1 19.9 7.1v7.1c-3.4.5-5.9 1.6-7.4 3.3-1.5 1.7-2.2 4.1-2.2 7.3zm30 0V26H50v16.9H30.1V26.2c0-12.7 6.6-19.1 19.9-19.1v7.1c-6.4.7-9.7 4.3-9.7 10.6z\\"></path></svg>"},"alignment":{"type":"string","default":""},"quoteFontSize":{"type":"string","default":"1rem"},"citationFontSize":{"type":"string","default":"0.75rem"},"fontFamily":{"type":"string","default":""},"fontWeight":{"type":"string","default":""},"boxShadow":{"type":"integer","default":0},"iconShadow":{"type":"integer","default":0},"iconMargin":{"type":"object","default":{"top":"0","left":"0","right":"0","bottom":"0"}},"iconPadding":{"type":"object","default":{"top":"0","left":"0","right":"0","bottom":"0"}},"showLines":{"type":"boolean","default":false},"linesColor":{"type":"string","default":"#ABABAB"},"margin":{"type":"object","default":{"top":"0","left":"0","right":"0","bottom":"0"}},"padding":{"type":"object","default":{"top":"0","left":"0","right":"0","bottom":"0"}}},"supports":{"html":false,"align":["wide","full"],"typography":{"lineHeight":true}},"textdomain":"wp-quote-blocks","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css"}');
 
 /***/ })
 
