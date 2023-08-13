@@ -274,6 +274,9 @@ function EditContainer( props ) {
 		let fontObj = fonts.items.find( font => {
 			return font.family === fontFamily;
 		})
+		if ( ! fontObj ) {
+			return [];
+		}
 	    let variants = fontObj.variants.map( variant => {
 			if ( parseInt( variant ) ) {
 				return parseInt( variant );
