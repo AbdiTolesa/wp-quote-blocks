@@ -128,16 +128,21 @@ function EditContainer( props ) {
 	}
 
 	const fetchGoogleFonts = async () => {
-		if ( googleFonts && Object.keys(googleFonts).length !== 0 ) {
-			return googleFonts;
+		localStorage.removeItem( 'googleFonts' );
+		let cachedGoogleFonts = localStorage.getItem( 'googleFonts' );
+		if ( cachedGoogleFonts ) {
+			cachedGoogleFonts = JSON.parse( cachedGoogleFonts );
+			setGoogleFonts( cachedGoogleFonts );
+			return cachedGoogleFonts;
 		}
-		console.log('FETCHING GOOGLE FONTS');
 
 		const KEY = await getGooglApiKey();
 		const url = `https://www.googleapis.com/webfonts/v1/webfonts?key=${KEY}`;
 		const response = await fetch( url );
 		const fonts = await response.json();
+		localStorage.setItem( 'googleFonts', JSON.stringify( fonts ) );
 		setGoogleFonts( fonts );
+
 		return fonts;
 	};
 
@@ -265,11 +270,6 @@ function EditContainer( props ) {
 
 	const getWeightsForFontFamily = async ( googleFonts, fontFamily )  => {
 		let fonts = googleFonts;
-		if ( ! fonts || fonts.length === 0 ) {
-			await fetchGoogleFonts().then( ( googleFonts ) => {
-				fonts = googleFonts;
-			});
-		}
 
 		let fontObj = fonts.items.find( font => {
 			return font.family === fontFamily;
@@ -300,6 +300,8 @@ function EditContainer( props ) {
 			if ( ! weights.includes( parseInt( attributes.fontWeight ) ) ) {
 				if ( weights.length === 0 ) {
 					setAttributes( { fontWeight: '' } );
+				} else if( weights.includes( 300 ) ) {
+					setAttributes( { fontWeight: 300 } );
 				} else {
 					setAttributes( { fontWeight: weights[0] } );
 				}
