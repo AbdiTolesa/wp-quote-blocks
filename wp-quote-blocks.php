@@ -31,15 +31,15 @@ function wp_quote_blocks_custom_script() {
 	if ( ! $post ) {
 		return;
 	}
-    $blocks = parse_blocks( $post->post_content );
+	$blocks = parse_blocks( $post->post_content );
 	$blocks = wp_list_filter( $blocks, array( 'blockName' => 'create-block/wp-quote-blocks' ) );
-	foreach( $blocks as $block ) {?>
+	foreach ( $blocks as $block ) {?>
 		<script type="text/javascript">
 			document.addEventListener("DOMContentLoaded", () => {
-				if ( "" !== "<?php echo ! empty($block['attrs']['fontFamily']) ? $block['attrs']['fontFamily'] : ''; ?>" ) {
+				if ( "" !== "<?php echo ! empty( $block['attrs']['fontFamily'] ) ? $block['attrs']['fontFamily'] : ''; ?>" ) {
 					let url = `https://fonts.googleapis.com/css?family=<?php echo $block['attrs']['fontFamily']; ?>`;
-					if ( "" !== "<?php echo ! empty($block['attrs']['fontWeight']) ? $block['attrs']['fontWeight'] : ''; ?>" ) {
-						url += ":<?php echo ! empty($block['attrs']['fontWeight']) ? $block['attrs']['fontWeight'] : ''; ?>";
+					if ( "" !== "<?php echo ! empty( $block['attrs']['fontWeight'] ) ? $block['attrs']['fontWeight'] : ''; ?>" ) {
+						url += ":<?php echo ! empty( $block['attrs']['fontWeight'] ) ? $block['attrs']['fontWeight'] : ''; ?>";
 					}
 					url += '&display=swap';
 
@@ -50,13 +50,13 @@ function wp_quote_blocks_custom_script() {
 		<?php
 	}
 }
-add_action('wp_enqueue_scripts', 'wp_quote_blocks_custom_script');
+add_action( 'wp_enqueue_scripts', 'wp_quote_blocks_custom_script' );
 
 function wpqb_register_settings() {
-	register_setting('wpqb_plugin_options_group', 'google_api_key');
+	register_setting( 'wpqb_plugin_options_group', 'google_api_key' );
 }
 
-add_action( 'admin_init', 'wpqb_register_settings');
+add_action( 'admin_init', 'wpqb_register_settings' );
 
 function wpqb_admin_menus() {
 	add_menu_page(
@@ -70,46 +70,51 @@ function wpqb_admin_menus() {
 	);
 }
 
-add_action('admin_menu', 'wpqb_admin_menus');
+add_action( 'admin_menu', 'wpqb_admin_menus' );
 
-function wpqb_page_html_form() { ?>
-    <div class="wrap">
-        <h2>WP Quote Blocks Settings</h2>
-        <form method="post" action="options.php">
-            <?php settings_fields('wpqb_plugin_options_group'); ?>
-        <table class="form-table">
-            <tr>
-                <th><label for="google_api_key">Google API key:</label></th>
-                <td>
-					<input type = 'text' class="regular-text" id="google_api_key" name="google_api_key" value="<?php echo get_option('google_api_key'); ?>">
-                </td>
-            </tr>
-        </table>
-        <?php submit_button(); ?>
-    </div>
+function wpqb_page_html_form() {
+	?>
+	<div class="wrap">
+		<h2>WP Quote Blocks Settings</h2>
+		<form method="post" action="options.php">
+			<?php settings_fields( 'wpqb_plugin_options_group' ); ?>
+		<table class="form-table">
+			<tr>
+				<th><label for="google_api_key">Google API key:</label></th>
+				<td>
+					<input type = 'text' class="regular-text" id="google_api_key" name="google_api_key" value="<?php echo esc_attr( get_option( 'google_api_key' ) ); ?>">
+				</td>
+			</tr>
+		</table>
+		<?php submit_button(); ?>
+	</div>
 <?php } ?>
 
 <?php
 add_action( 'wp_ajax_get_google_api_key', 'wpqb_get_google_api_key' );
 
 function wpqb_get_google_api_key() {
-	error_log(print_r( $_POST['_wpnonce'], true ));
-	if (!isset($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'wpqb_nonce')) {
-        die('Unauthorized!');
-    }
-	wp_send_json_success(get_option( 'google_api_key') );
+	if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'wpqb_nonce' ) ) {
+		die( 'Unauthorized!' );
+	}
+	wp_send_json_success( get_option( 'google_api_key' ) );
 }
 
 function enqueue_block_assets() {
-    wp_enqueue_script(
-        'wpqb-script',
-        plugins_url('edit.js', __FILE__),
-        array('wp-blocks', 'wp-i18n', 'wp-element', 'wp-api'),
-        null
-    );
+	wp_enqueue_script(
+		'wpqb-script',
+		plugins_url( 'edit.js', __FILE__ ),
+		array( 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-api' ),
+		null
+	);
 
-    wp_localize_script('wpqb-script', 'wpqbVars', array(
-		'nonce' => wp_create_nonce('wpqb_nonce')
-	));
+	wp_localize_script(
+		'wpqb-script',
+		'wpqbVars',
+		array(
+			'nonce' => wp_create_nonce( 'wpqb_nonce' ),
+		)
+	);
 }
-add_action('enqueue_block_editor_assets', 'enqueue_block_assets');
+
+add_action( 'enqueue_block_editor_assets', 'enqueue_block_assets' );

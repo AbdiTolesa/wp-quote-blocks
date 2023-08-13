@@ -45,12 +45,12 @@
       "default": ""
     },
     "quoteFontSize": {
-      "type": "string",
-      "default": "1rem"
+      "type": "integer",
+      "default": "16"
     },
     "citationFontSize": {
-      "type": "string",
-      "default": "0.75rem"
+      "type": "integer",
+      "default": "12"
     },
     "fontFamily": {
       "type": "string",

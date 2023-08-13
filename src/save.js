@@ -72,6 +72,7 @@ export default function save( props ) {
 
 	const quoteTextsStyle = {
 		textAlign: attributes.alignment ? attributes.alignment : 'inherit',
+		fontFamily: `"${attributes.fontFamily}", Sans-serif`
 	};
 
 	const quoteWrapperStyles = {
@@ -87,7 +88,7 @@ export default function save( props ) {
 			{ leftIcon }
 			<div className="quote-wrapper" style={quoteWrapperStyles}>
 				<RichText.Content
-				style={ { ...quoteTextsStyle, fontWeight, fontFamily: `"${attributes.fontFamily}", Sans-serif`, fontSize: attributes.quoteFontSize } }
+				style={ { ...quoteTextsStyle, fontWeight: fontWeight || 'inherit', fontSize: attributes.quoteFontSize } }
  				tagName="p"
 				className="quote"
 				value={ attributes.quote }

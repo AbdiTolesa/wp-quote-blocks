@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<ruleset name="WP Quote Blocks">
+	<exclude-pattern>vendor/*</exclude-pattern>
+	<exclude-pattern>node_modules/*</exclude-pattern>
+	<exclude-pattern>deprecated/*</exclude-pattern>
+	<exclude-pattern>bin/*</exclude-pattern>
+
+	<arg name="extensions" value="php" />
+	<arg value="nsp" />
+
+	<rule ref="WordPress">
+		<exclude name="Squiz.Commenting" />
+		<exclude name="Generic.Commenting.DocComment.MissingShort" />
+		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
+		<exclude name="WordPress.PHP.YodaConditions" />
+	</rule>
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="wp-quote-blocks"/>
+			</property>
+		</properties>
+	</rule>
+	<rule ref="Squiz.Scope.StaticThisUsage" />
+</ruleset>
