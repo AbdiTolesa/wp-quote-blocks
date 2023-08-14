@@ -485,19 +485,19 @@ function EditContainer( props ) {
 	const fontFamilySelector = () => {
 		return (
 			<SelectControl
-				label="Select font"
+				label={ __( 'Select font' ) }
 				value={ attributes.fontFamily }
 				onChange={ ( newFont ) => onChangeFontFamily( newFont ) }
 				__nextHasNoMarginBottom
 			>
-				<optgroup label="System fonts">
+				<optgroup label={ __( 'System fonts' ) }>
 					{ getFonts( 'system' ).map( ( font ) => (
 						<option key={ font.value } value={ font.value }>
 							{ font.label }
 						</option>
 					) ) }
 				</optgroup>
-				<optgroup label="Google fonts">
+				<optgroup label={ __( 'Google fonts' ) }>
 					{ getFonts( 'google' ).map( ( font ) => (
 						<option key={ font.value } value={ font.value }>
 							{ font.label }
@@ -615,7 +615,7 @@ function EditContainer( props ) {
 			<InspectorControls>
 				<PanelBody title={ __( 'General', 'wp-quote-blocks' ) }>
 					<BoxControl
-						label="Quote margin"
+						label={ __( 'Quote margin', 'wp-quote-blocks' ) }
 						values={ attributes.margin }
 						onChange={ ( nextValues ) =>
 							setAttributes( { margin: nextValues } )
@@ -623,7 +623,7 @@ function EditContainer( props ) {
 						inputProps={ { min: -300 } }
 					/>
 					<BoxControl
-						label="Quote padding"
+						label={ __( 'Quote padding', 'wp-quote-blocks' ) }
 						values={ attributes.padding }
 						onChange={ ( nextValues ) =>
 							setAttributes( { padding: nextValues } )
@@ -638,11 +638,11 @@ function EditContainer( props ) {
 						max={ 20 }
 					/>
 					<ToggleControl
-						label="Show lines"
+						label={ __( 'Show lines', 'wp-quote-blocks' ) }
 						help={
 							attributes.showLines
-								? 'Lines are shown'
-								: 'Lines are hidden'
+								? __( 'Lines are shown', 'wp-quote-blocks' )
+								: __( 'Lines are hidden', 'wp-quote-blocks' )
 						}
 						checked={ attributes.showLines }
 						onChange={ () => {
@@ -674,7 +674,7 @@ function EditContainer( props ) {
 					/>
 					{ iconSetting }
 					<BoxControl
-						label="Margin"
+						label={ __( 'Margin', 'wp-quote-blocks' ) }
 						values={ attributes.margin }
 						onChange={ ( nextValues ) =>
 							setAttributes( { iconMargin: nextValues } )
@@ -682,7 +682,7 @@ function EditContainer( props ) {
 						inputProps={ { min: -300 } }
 					/>
 					<BoxControl
-						label="Padding"
+						label={ __( 'Padding', 'wp-quote-blocks' ) }
 						values={ attributes.padding }
 						onChange={ ( nextValues ) =>
 							setAttributes( { iconPadding: nextValues } )
@@ -695,19 +695,21 @@ function EditContainer( props ) {
 						colorSettings={ colorSettingsDropDown }
 					></PanelColorSettings>
 				</PanelBody>
-				<ToolsPanel label={ __( 'Typography' ) }>
+				<ToolsPanel label={ __( 'Typography', 'wp-quote-blocks' ) }>
 					<ToolsPanelItem
 						hasValue={ () =>
 							!! attributes.quoteFontSize ||
 							!! attributes.citationFontSize
 						}
-						label={ __( 'Font sizes' ) }
+						label={ __( 'Font sizes', 'wp-quote-blocks' ) }
 						onDeselect={ () => resetFontSizes() }
 					>
 						<PanelBody
 							title={ __( 'Font sizes', 'wp-quote-blocks' ) }
 						>
-							<p style={ { marginBottom: '6px' } }>Quote:</p>
+							<p style={ { marginBottom: '6px' } }>
+								{ __( 'Quote', 'wp-quote-blocks' ) }
+							</p>
 							<FontSizePicker
 								__nextHasNoMarginBottom
 								fontSizes={ fontSizes }
@@ -715,7 +717,9 @@ function EditContainer( props ) {
 								fallbackFontSize="16"
 								onChange={ onChangeQuoteFontSize }
 							/>
-							<p style={ { marginBottom: '6px' } }>Citation:</p>
+							<p style={ { marginBottom: '6px' } }>
+								{ __( 'Citation', 'wp-quote-blocks' ) }
+							</p>
 							<FontSizePicker
 								__nextHasNoMarginBottom
 								fontSizes={ fontSizes }
@@ -727,7 +731,7 @@ function EditContainer( props ) {
 					</ToolsPanelItem>
 					<ToolsPanelItem
 						hasValue={ () => !! fontOptions }
-						label={ __( 'Font family' ) }
+						label={ __( 'Font family', 'wp-quote-blocks' ) }
 						onDeselect={ () =>
 							setAttributes( { fontFamily: 'Sans-serif' } )
 						}
@@ -740,7 +744,7 @@ function EditContainer( props ) {
 					</ToolsPanelItem>
 					<ToolsPanelItem
 						hasValue={ () => true }
-						label={ __( 'Font weight' ) }
+						label={ __( 'Font weight', 'wp-quote-blocks' ) }
 					>
 						<PanelBody title={ '' }>
 							{ fontWeightSelector }
@@ -793,7 +797,7 @@ function EditContainer( props ) {
 						} }
 						value={ attributes.quote }
 						onChange={ ( quote ) => setAttributes( { quote } ) }
-						placeholder={ __( 'Add quote…' ) }
+						placeholder={ __( 'Add quote…', 'wp-quote-blocks' ) }
 					/>
 					<RichText
 						tagName="p"
@@ -806,7 +810,7 @@ function EditContainer( props ) {
 						onChange={ ( citation ) =>
 							setAttributes( { citation } )
 						}
-						placeholder={ __( 'Add citation…' ) }
+						placeholder={ __( 'Add citation…', 'wp-quote-blocks' ) }
 						textAlign="center"
 					/>
 				</div>

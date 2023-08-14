@@ -771,17 +771,17 @@ function EditContainer(props) {
   };
   const fontFamilySelector = () => {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.SelectControl, {
-      label: "Select font",
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Select font'),
       value: attributes.fontFamily,
       onChange: newFont => onChangeFontFamily(newFont),
       __nextHasNoMarginBottom: true
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("optgroup", {
-      label: "System fonts"
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('System fonts')
     }, getFonts('system').map(font => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
       key: font.value,
       value: font.value
     }, font.label))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("optgroup", {
-      label: "Google fonts"
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Google fonts')
     }, getFonts('google').map(font => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
       key: font.value,
       value: font.value
@@ -846,7 +846,7 @@ function EditContainer(props) {
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.InspectorControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.PanelBody, {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('General', 'wp-quote-blocks')
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.__experimentalBoxControl, {
-    label: "Quote margin",
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Quote margin', 'wp-quote-blocks'),
     values: attributes.margin,
     onChange: nextValues => setAttributes({
       margin: nextValues
@@ -855,7 +855,7 @@ function EditContainer(props) {
       min: -300
     }
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.__experimentalBoxControl, {
-    label: "Quote padding",
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Quote padding', 'wp-quote-blocks'),
     values: attributes.padding,
     onChange: nextValues => setAttributes({
       padding: nextValues
@@ -868,8 +868,8 @@ function EditContainer(props) {
     min: 0,
     max: 20
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.ToggleControl, {
-    label: "Show lines",
-    help: attributes.showLines ? 'Lines are shown' : 'Lines are hidden',
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Show lines', 'wp-quote-blocks'),
+    help: attributes.showLines ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Lines are shown', 'wp-quote-blocks') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Lines are hidden', 'wp-quote-blocks'),
     checked: attributes.showLines,
     onChange: () => {
       setAttributes({
@@ -894,7 +894,7 @@ function EditContainer(props) {
     min: 0,
     max: 20
   }), iconSetting, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.__experimentalBoxControl, {
-    label: "Margin",
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Margin', 'wp-quote-blocks'),
     values: attributes.margin,
     onChange: nextValues => setAttributes({
       iconMargin: nextValues
@@ -903,7 +903,7 @@ function EditContainer(props) {
       min: -300
     }
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.__experimentalBoxControl, {
-    label: "Padding",
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Padding', 'wp-quote-blocks'),
     values: attributes.padding,
     onChange: nextValues => setAttributes({
       iconPadding: nextValues
@@ -914,10 +914,10 @@ function EditContainer(props) {
     initialOpen: false,
     colorSettings: colorSettingsDropDown
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.__experimentalToolsPanel, {
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Typography')
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Typography', 'wp-quote-blocks')
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.__experimentalToolsPanelItem, {
     hasValue: () => !!attributes.quoteFontSize || !!attributes.citationFontSize,
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Font sizes'),
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Font sizes', 'wp-quote-blocks'),
     onDeselect: () => resetFontSizes()
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.PanelBody, {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Font sizes', 'wp-quote-blocks')
@@ -925,7 +925,7 @@ function EditContainer(props) {
     style: {
       marginBottom: '6px'
     }
-  }, "Quote:"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.FontSizePicker, {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Quote', 'wp-quote-blocks')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.FontSizePicker, {
     __nextHasNoMarginBottom: true,
     fontSizes: fontSizes,
     value: attributes.quoteFontSize,
@@ -935,7 +935,7 @@ function EditContainer(props) {
     style: {
       marginBottom: '6px'
     }
-  }, "Citation:"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.FontSizePicker, {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Citation', 'wp-quote-blocks')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.FontSizePicker, {
     __nextHasNoMarginBottom: true,
     fontSizes: fontSizes,
     value: attributes.citationFontSize,
@@ -943,7 +943,7 @@ function EditContainer(props) {
     onChange: onChangeCitationFontSize
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.__experimentalToolsPanelItem, {
     hasValue: () => !!fontOptions,
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Font family'),
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Font family', 'wp-quote-blocks'),
     onDeselect: () => setAttributes({
       fontFamily: 'Sans-serif'
     })
@@ -951,7 +951,7 @@ function EditContainer(props) {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Font family', 'wp-quote-blocks')
   }, fontFamilySelector)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.__experimentalToolsPanelItem, {
     hasValue: () => true,
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Font weight')
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Font weight', 'wp-quote-blocks')
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.PanelBody, {
     title: ''
   }, fontWeightSelector)))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -992,7 +992,7 @@ function EditContainer(props) {
     onChange: quote => setAttributes({
       quote
     }),
-    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Add quote…')
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Add quote…', 'wp-quote-blocks')
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.RichText, {
     tagName: "p",
     className: "citation",
@@ -1004,7 +1004,7 @@ function EditContainer(props) {
     onChange: citation => setAttributes({
       citation
     }),
-    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Add citation…'),
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Add citation…', 'wp-quote-blocks'),
     textAlign: "center"
   })), rightIcon, horizontalLine));
 }
