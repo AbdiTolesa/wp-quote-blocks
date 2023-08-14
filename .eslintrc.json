@@ -2,10 +2,11 @@
 	"root": true,
 	"parser": "@babel/eslint-parser",
 	"extends": [
+		"wordpress",
 		"plugin:@wordpress/eslint-plugin/recommended",
-		"wordpress"
-		// "plugin:react/recommended",
-		// "plugin:jsx-a11y/recommended"
+		"plugin:@wordpress/eslint-plugin/custom",
+		"plugin:react/recommended",
+		"plugin:jsx-a11y/recommended"
 	],
 	"env": {
 		"browser": true,

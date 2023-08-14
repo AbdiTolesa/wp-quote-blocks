@@ -373,14 +373,14 @@ __webpack_require__.r(__webpack_exports__);
  * The edit function describes the structure of your block in the context of the
  * editor. This represents what the editor will render when the block is used.
  *
+ * @param  props
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
  *
  * @return {WPElement} Element to render.
  */
 function Edit(props) {
   const {
-    attributes,
-    setAttributes
+    attributes
   } = props;
   const isVariationSelected = attributes.class !== '';
   const Component = isVariationSelected ? EditContainer : Placeholder;
@@ -435,7 +435,7 @@ function EditContainer(props) {
     const families = fontFaces.map(font => font.family);
     return [...new Set(families)];
   };
-  const loadFontCss = async (googleFonts, font) => {
+  const loadFontCss = async (gFonts, font) => {
     const linkId = font.replace(/ /g, '+');
     if (fetchSystemFonts().includes(font) || !font || document.getElementById(`google-font-${linkId}`)) {
       return;
@@ -446,7 +446,7 @@ function EditContainer(props) {
       document.body.insertAdjacentHTML('beforebegin', `<link rel='stylesheet' id="google-font-${linkId}" href='${url}' type='text/css' media='all' />`);
     };
     let fontVariants;
-    getWeightsForFontFamily(googleFonts, font).then(weights => {
+    getWeightsForFontFamily(gFonts, font).then(weights => {
       fontVariants = weights.join(',');
       insertFontStylesheet(fontVariants);
     });
@@ -471,11 +471,11 @@ function EditContainer(props) {
     if (fontOptions) {
       return;
     }
-    let options = {
+    const options = {
       system: [],
       google: []
     };
-    let systemFonts = fetchSystemFonts();
+    const systemFonts = fetchSystemFonts();
     systemFonts.forEach(font => {
       options.system.push({
         label: font,
@@ -493,7 +493,7 @@ function EditContainer(props) {
     });
   };
   const updateFontWeightOptions = weights => {
-    let options = [];
+    const options = [];
     weights.forEach(weight => {
       options.push({
         label: weight,
@@ -614,7 +614,7 @@ function EditContainer(props) {
     size: "24"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("path", {
     d: "M19.8 9.3C10.5 11.8 4.6 17 2.1 24.8c2.3-3.6 5.6-5.4 9.9-5.4 3.3 0 6 1.1 8.3 3.3 2.2 2.2 3.4 5 3.4 8.3 0 3.2-1.1 5.8-3.3 8-2.2 2.2-5.1 3.2-8.7 3.2-3.7 0-6.5-1.2-8.6-3.5C1 36.3 0 33.1 0 29 0 18.3 6.5 11.2 19.6 7.9l.2 1.4zm26.4 0C36.9 11.9 31 17 28.5 24.8c2.2-3.6 5.5-5.4 9.8-5.4 3.2 0 6 1.1 8.3 3.2 2.3 2.2 3.4 4.9 3.4 8.3 0 3.1-1.1 5.8-3.3 7.9-2.2 2.2-5.1 3.3-8.6 3.3-3.7 0-6.6-1.1-8.6-3.4-2.1-2.3-3.1-5.5-3.1-9.7 0-10.7 6.6-17.8 19.7-21.1l.1 1.4z"
-  })), "'"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Button, {
+  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Button, {
     variant: attributes.icon === icons[4] ? 'primary' : 'secondary',
     onClick: () => setAttributes({
       icon: icons[4]
@@ -625,7 +625,7 @@ function EditContainer(props) {
     size: "24"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("path", {
     d: "M12.5 9.2H19c1.1 0 1.8.2 2.3.7.5.5.7 1.2.7 2.3v3.4c0 1.1-.2 1.8-.7 2.3-.5.5-1.2.7-2.3.7h-5.8c-.7 0-1.3.2-1.7.6-.4.4-.6 1-.6 1.7v1.3H20c1.1 0 1.8.2 2.3.7.5.5.7 1.2.7 2.3v12.5c0 1.1-.2 1.8-.7 2.3-.5.5-1.2.7-2.3.7H3c-1.1 0-1.8-.2-2.3-.7-.5-.4-.7-1.2-.7-2.2V21.9c0-4.3 1.1-7.4 3.4-9.6 2.3-2 5.3-3.1 9.1-3.1zm26.9 0h6.5c1.1 0 1.8.2 2.3.7.5.5.7 1.2.7 2.3v3.4c0 1.1-.2 1.8-.7 2.3-.5.5-1.2.7-2.3.7h-5.8c-.7 0-1.3.2-1.7.6-.4.4-.6 1-.6 1.7v1.3H47c1.1 0 1.8.2 2.3.7.5.5.7 1.2.7 2.3v12.5c0 1.1-.2 1.8-.7 2.3-.5.5-1.2.7-2.3.7H30c-1.1 0-1.8-.2-2.3-.7-.5-.5-.7-1.2-.7-2.3V21.9c0-4.3 1.1-7.4 3.4-9.6 2.2-2 5.2-3.1 9-3.1z"
-  })), "'"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Button, {
+  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Button, {
     variant: attributes.icon === icons[5] ? 'primary' : 'secondary',
     onClick: () => setAttributes({
       icon: icons[5]
@@ -704,8 +704,8 @@ function EditContainer(props) {
     });
   };
   const getWeightsForFontFamily = async (googleFonts, fontFamily) => {
-    let fonts = googleFonts;
-    let fontObj = fonts.items.find(font => {
+    const fonts = googleFonts;
+    const fontObj = fonts.items.find(font => {
       return font.family === fontFamily;
     });
     if (!fontObj) {
@@ -802,7 +802,7 @@ function EditContainer(props) {
       padding: `${(attributes.iconPadding.top || '0') + ' ' + (attributes.iconPadding.right || '0') + ' ' + (attributes.iconPadding.bottom || '0') + ' ' + (attributes.iconPadding.left || '0')}`
     }
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("svg", {
-    xlmns: "http://www.w3.org/2000/svg",
+    xmlns: "http://www.w3.org/2000/svg",
     viewBox: iconSVG.getAttribute('viewBox'),
     style: iconStyles,
     dangerouslySetInnerHTML: {
@@ -812,7 +812,7 @@ function EditContainer(props) {
   const rightIcon = attributes.class.includes('closed') && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "quote-icon quote-right-icon"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("svg", {
-    xlmns: "http://www.w3.org/2000/svg",
+    xmlns: "http://www.w3.org/2000/svg",
     viewBox: iconSVG.getAttribute('viewBox'),
     style: {
       ...iconStyles,
@@ -992,7 +992,7 @@ function EditContainer(props) {
     onChange: quote => setAttributes({
       quote
     }),
-    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Add quote...')
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Add quote…')
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.RichText, {
     tagName: "p",
     className: "citation",
@@ -1004,7 +1004,7 @@ function EditContainer(props) {
     onChange: citation => setAttributes({
       citation
     }),
-    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Add citation...'),
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Add citation…'),
     textAlign: "center"
   })), rightIcon, horizontalLine));
 }
@@ -1073,30 +1073,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__);
 
-/**
- * React hook that is used to mark the block wrapper element.
- * It provides all the necessary props like the class name.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
- */
 
-
-/**
- * The save function defines the way in which the different attributes should
- * be combined into the final markup, which is then serialized by the block
- * editor into `post_content`.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#save
- *
- * @return {WPElement} Element to render.
- */
 function save(props) {
   const {
     attributes
   } = props;
   let leftIcon = null,
     rightIcon = null;
-  const blockProps = _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save();
   const {
     iconSize,
     iconColor,
@@ -1127,7 +1110,7 @@ function save(props) {
       padding: `${(attributes.iconPadding.top || '0') + ' ' + (attributes.iconPadding.right || '0') + ' ' + (attributes.iconPadding.bottom || '0') + ' ' + (attributes.iconPadding.left || '0')}`
     }
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("svg", {
-    xlmns: "http://www.w3.org/2000/svg",
+    xmlns: "http://www.w3.org/2000/svg",
     viewBox: iconSVG.getAttribute('viewBox'),
     style: iconStyles,
     dangerouslySetInnerHTML: {
@@ -1138,7 +1121,7 @@ function save(props) {
     rightIcon = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "quote-icon quote-right-icon"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("svg", {
-      xlmns: "http://www.w3.org/2000/svg",
+      xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 50 50",
       ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save({
         style: {
