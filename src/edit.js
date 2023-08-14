@@ -91,16 +91,26 @@ function EditContainer( props ) {
 		return apiKey;
 	};
 
-	const fetchSystemFonts = () => {
-		const fontFaces = [ ...document.fonts.values() ];
-		const families = fontFaces.map( ( font ) => font.family );
-		return [ ...new Set( families ) ];
+	const fetchSystemFonts = async () => {
+		const fontFamilies = [];
+		const fonts = await document.fonts.ready;
+		const kindaIterable = fonts.values();
+		while ( true ) {
+			const font = kindaIterable.next();
+			if ( font.done ) {
+				break;
+			}
+			fontFamilies.push( font.value.family );
+		}
+
+		return [ ...new Set( fontFamilies ) ];
 	};
 
 	const loadFontCss = async ( gFonts, font ) => {
 		const linkId = font.replace( / /g, '+' );
+		const systemFonts = await fetchSystemFonts();
 		if (
-			fetchSystemFonts().includes( font ) ||
+			systemFonts.includes( font ) ||
 			! font ||
 			document.getElementById( `google-font-${ linkId }` )
 		) {
@@ -142,13 +152,13 @@ function EditContainer( props ) {
 		return fonts;
 	};
 
-	const getFontOptions = ( googleFonts ) => {
+	const getFontOptions = async( googleFonts ) => {
 		if ( fontOptions ) {
 			return;
 		}
 
 		const options = { system: [], google: [] };
-		const systemFonts = fetchSystemFonts();
+		const systemFonts = await fetchSystemFonts();
 		systemFonts.forEach( ( font ) => {
 			options.system.push( { label: font, value: font } );
 		} );
@@ -485,19 +495,19 @@ function EditContainer( props ) {
 	const fontFamilySelector = () => {
 		return (
 			<SelectControl
-				label={ __( 'Select font' ) }
+				label={ __( 'Select font', 'wp-quote-blocks'  ) }
 				value={ attributes.fontFamily }
 				onChange={ ( newFont ) => onChangeFontFamily( newFont ) }
 				__nextHasNoMarginBottom
 			>
-				<optgroup label={ __( 'System fonts' ) }>
+				<optgroup label={ __( 'System fonts', 'wp-quote-blocks' ) }>
 					{ getFonts( 'system' ).map( ( font ) => (
 						<option key={ font.value } value={ font.value }>
 							{ font.label }
 						</option>
 					) ) }
 				</optgroup>
-				<optgroup label={ __( 'Google fonts' ) }>
+				<optgroup label={ __( 'Google fonts', 'wp-quote-blocks' ) }>
 					{ getFonts( 'google' ).map( ( font ) => (
 						<option key={ font.value } value={ font.value }>
 							{ font.label }
@@ -589,22 +599,22 @@ function EditContainer( props ) {
 
 	const fontSizes = [
 		{
-			name: __( 'Small' ),
+			name: __( 'Small', 'wp-quote-blocks' ),
 			slug: 'small',
 			size: 12,
 		},
 		{
-			name: __( 'Medium' ),
+			name: __( 'Medium', 'wp-quote-blocks' ),
 			slug: 'medium',
 			size: 14,
 		},
 		{
-			name: __( 'Large' ),
+			name: __( 'Large', 'wp-quote-blocks' ),
 			slug: 'large',
 			size: 20,
 		},
 		{
-			name: __( 'Extra large' ),
+			name: __( 'Extra large', 'wp-quote-blocks' ),
 			slug: 'extra-large',
 			size: 28,
 		},

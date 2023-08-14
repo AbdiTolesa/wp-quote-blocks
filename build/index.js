@@ -430,14 +430,23 @@ function EditContainer(props) {
     });
     return apiKey;
   };
-  const fetchSystemFonts = () => {
-    const fontFaces = [...document.fonts.values()];
-    const families = fontFaces.map(font => font.family);
-    return [...new Set(families)];
+  const fetchSystemFonts = async () => {
+    const fontFamilies = [];
+    const fonts = await document.fonts.ready;
+    const kindaIterable = fonts.values();
+    while (true) {
+      const font = kindaIterable.next();
+      if (font.done) {
+        break;
+      }
+      fontFamilies.push(font.value.family);
+    }
+    return [...new Set(fontFamilies)];
   };
   const loadFontCss = async (gFonts, font) => {
     const linkId = font.replace(/ /g, '+');
-    if (fetchSystemFonts().includes(font) || !font || document.getElementById(`google-font-${linkId}`)) {
+    const systemFonts = await fetchSystemFonts();
+    if (systemFonts.includes(font) || !font || document.getElementById(`google-font-${linkId}`)) {
       return;
     }
     let url = `https://fonts.googleapis.com/css?family=${font}`;
@@ -467,7 +476,7 @@ function EditContainer(props) {
     setGoogleFonts(fonts);
     return fonts;
   };
-  const getFontOptions = googleFonts => {
+  const getFontOptions = async googleFonts => {
     if (fontOptions) {
       return;
     }
@@ -475,7 +484,7 @@ function EditContainer(props) {
       system: [],
       google: []
     };
-    const systemFonts = fetchSystemFonts();
+    const systemFonts = await fetchSystemFonts();
     systemFonts.forEach(font => {
       options.system.push({
         label: font,
@@ -771,17 +780,17 @@ function EditContainer(props) {
   };
   const fontFamilySelector = () => {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.SelectControl, {
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Select font'),
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Select font', 'wp-quote-blocks'),
       value: attributes.fontFamily,
       onChange: newFont => onChangeFontFamily(newFont),
       __nextHasNoMarginBottom: true
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("optgroup", {
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('System fonts')
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('System fonts', 'wp-quote-blocks')
     }, getFonts('system').map(font => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
       key: font.value,
       value: font.value
     }, font.label))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("optgroup", {
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Google fonts')
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Google fonts', 'wp-quote-blocks')
     }, getFonts('google').map(font => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
       key: font.value,
       value: font.value
@@ -827,19 +836,19 @@ function EditContainer(props) {
     padding: `${(attributes.padding.top || '0') + ' ' + (attributes.padding.right || '0') + ' ' + (attributes.padding.bottom || '0') + ' ' + (attributes.padding.left || '0')}`
   };
   const fontSizes = [{
-    name: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Small'),
+    name: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Small', 'wp-quote-blocks'),
     slug: 'small',
     size: 12
   }, {
-    name: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Medium'),
+    name: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Medium', 'wp-quote-blocks'),
     slug: 'medium',
     size: 14
   }, {
-    name: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Large'),
+    name: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Large', 'wp-quote-blocks'),
     slug: 'large',
     size: 20
   }, {
-    name: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Extra large'),
+    name: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Extra large', 'wp-quote-blocks'),
     slug: 'extra-large',
     size: 28
   }];
