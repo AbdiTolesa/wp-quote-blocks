@@ -362,6 +362,7 @@ function EditContainer( props ) {
 			Math.max( attributes.boxShadow - 7, 0 ) +
 			'px ' +
 			'rgba(0,0,0,0.2)',
+		borderRadius: attributes.borderRadius + '%',
 	};
 
 	const quoteTextsStyle = {
@@ -516,12 +517,30 @@ function EditContainer( props ) {
 		<>
 			<InspectorControls>
 				<PanelBody title={ __( 'General', 'wp-quote-blocks' ) }>
+					<RangeControl
+						label={ __( 'Shadow', 'wp-quote-blocks' ) }
+						value={ parseInt( attributes.boxShadow ) }
+						onChange={ onChangeBoxShadow }
+						step="1"
+						min={ 0 }
+						max={ 20 }
+					/>
+					<RangeControl
+						label={ __( 'Border radius', 'wp-quote-blocks' ) }
+						value={ parseInt( attributes.borderRadius ) }
+						onChange={ ( newBorderRadius ) => {
+							setAttributes( { borderRadius: newBorderRadius } );
+						} }
+						step="1"
+						min={ 0 }
+						max={ 50 }
+					/>
 					<BoxControl
 						label={ __( 'Quote margin', 'wp-quote-blocks' ) }
 						values={ attributes.margin }
-						onChange={ ( nextValues ) =>
-							setAttributes( { margin: nextValues } )
-						}
+						onChange={ ( nextValues ) => {
+							setAttributes( { margin: nextValues } );
+						} }
 						inputProps={ { min: -300 } }
 					/>
 					<BoxControl
@@ -530,14 +549,6 @@ function EditContainer( props ) {
 						onChange={ ( nextValues ) =>
 							setAttributes( { padding: nextValues } )
 						}
-					/>
-					<RangeControl
-						label={ __( 'Shadow', 'wp-quote-blocks' ) }
-						value={ parseInt( attributes.boxShadow ) }
-						onChange={ onChangeBoxShadow }
-						step="1"
-						min={ 0 }
-						max={ 20 }
 					/>
 					<ToggleControl
 						label={ __(

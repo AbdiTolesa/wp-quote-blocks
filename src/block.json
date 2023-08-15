@@ -64,6 +64,10 @@
 			"type": "integer",
 			"default": 0
 		},
+		"borderRadius": {
+			"type": "integer",
+			"default":0
+		},
 		"iconShadow": {
 			"type": "integer",
 			"default": 0

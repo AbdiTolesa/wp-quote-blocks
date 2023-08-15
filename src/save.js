@@ -90,6 +90,7 @@ export default function save( props ) {
 			Math.max( boxShadow - 7, 0 ) +
 			'px ' +
 			'rgba(0,0,0,0.2)',
+		borderRadius: attributes.borderRadius + '%',
 	};
 
 	const quoteTextsStyle = {
