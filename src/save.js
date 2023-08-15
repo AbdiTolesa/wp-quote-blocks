@@ -118,6 +118,10 @@ export default function save( props ) {
 		}`,
 	};
 
+	const horizontalBar = attributes.showLines && (
+		<div style={ { borderBottom: 'solid' + attributes.linesColor } }></div>
+	);
+
 	return (
 		<div
 			{ ...useBlockProps.save( {
@@ -125,12 +129,7 @@ export default function save( props ) {
 				className: `wp-quote-blocks quote-variation-${ attributes.class }`,
 			} ) }
 		>
-			{ attributes.showLines && (
-				<div
-					className="wpqb__line"
-					style={ { borderColor: attributes.linesColor } }
-				></div>
-			) }
+			{ horizontalBar }
 			{ leftIcon }
 			<div className="quote-wrapper" style={ quoteWrapperStyles }>
 				<RichText.Content
@@ -154,12 +153,7 @@ export default function save( props ) {
 				/>
 			</div>
 			{ rightIcon }
-			{ attributes.showLines && (
-				<div
-					className="wpqb__line"
-					style={ { borderColor: attributes.linesColor } }
-				></div>
-			) }
+			{ horizontalBar }
 		</div>
 	);
 }
