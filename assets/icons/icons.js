@@ -20,7 +20,7 @@ icons.default =
 </svg>;
 
 
-icons.simple = 
+icons.topCentre = 
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="400 400 700 700">
 <g transform="matrix(4.75 0 0 3.45 524.23 473.07)">
 <path fill="rgb(101,101,101)" fillRule="nonzero" opacity="1" vectorEffect="non-scaling-stroke" strokeLinecap="butt" strokeLinejoin="miter" strokeMiterlimit="4" strokeWidth="0" d="M 94.75 50 C 94.75 56.213 89.514 61.25 83.054 61.25 L 16.946 61.25 C 10.486 61.25 5.25 56.213 5.25 50 L 5.25 50 C 5.25 43.787 10.486 38.75 16.945999999999998 38.75 L 83.053 38.75 C 89.514 38.75 94.75 43.787 94.75 50 L 94.75 50 z" strokeLinecap="round"/>

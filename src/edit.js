@@ -376,15 +376,17 @@ function EditContainer( props ) {
 
 	const fontWeightSelector = () => {
 		return (
-			<SelectControl
-				label="Font weight"
-				value={ fontWeight }
-				onChange={ ( newWeight ) =>
-					setAttributes( { fontWeight: newWeight } )
-				}
-				__nextHasNoMarginBottom
-				options={ fontWeights }
-			/>
+			fontWeights.length !== 0 && (
+				<SelectControl
+					label="Font weight"
+					value={ fontWeight }
+					onChange={ ( newWeight ) =>
+						setAttributes( { fontWeight: newWeight } )
+					}
+					__nextHasNoMarginBottom
+					options={ fontWeights }
+				/>
+			)
 		);
 	};
 
@@ -420,7 +422,7 @@ function EditContainer( props ) {
 
 	const iconSVG = svgElementFromString( attributes.icon );
 
-	const leftIcon = (
+	const leftIcon = attributes.showIcon && (
 		<div
 			className="quote-icon"
 			style={ {
@@ -456,18 +458,19 @@ function EditContainer( props ) {
 		</div>
 	);
 
-	const rightIcon = attributes.class.includes( 'closed' ) && (
-		<div className="quote-icon quote-right-icon">
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				viewBox={ iconSVG.getAttribute( 'viewBox' ) }
-				style={ { ...iconStyles, transform: 'rotate(180deg)' } }
-				dangerouslySetInnerHTML={ {
-					__html: svgElementFromString( attributes.icon ).innerHTML,
-				} }
-			/>
-		</div>
-	);
+	const rightIcon = attributes.showIcon &&
+		attributes.class.includes( 'closed' ) && (
+			<div className="quote-icon quote-right-icon">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox={ iconSVG.getAttribute( 'viewBox' ) }
+					style={ { ...iconStyles, transform: 'rotate(180deg)' } }
+					dangerouslySetInnerHTML={ {
+						__html: svgElementFromString( attributes.icon ).innerHTML,
+					} }
+				/>
+			</div>
+		);
 
 	const quoteWrapperStyles = {
 		margin: `${
@@ -517,6 +520,20 @@ function EditContainer( props ) {
 		<>
 			<InspectorControls>
 				<PanelBody title={ __( 'General', 'wp-quote-blocks' ) }>
+					<ToggleControl
+						label={ __( 'Show icon', 'wp-quote-blocks' ) }
+						help={
+							attributes.showIcon
+								? __( 'Icon is shown', 'wp-quote-blocks' )
+								: __( 'Icon is hidden', 'wp-quote-blocks' )
+						}
+						checked={ attributes.showIcon }
+						onChange={ () => {
+							setAttributes( {
+								showIcon: ! attributes.showIcon,
+							} );
+						} }
+					/>
 					<RangeControl
 						label={ __( 'Shadow', 'wp-quote-blocks' ) }
 						value={ parseInt( attributes.boxShadow ) }
@@ -658,12 +675,38 @@ function EditContainer( props ) {
 							{ fontFamilySelector }
 						</PanelBody>
 					</ToolsPanelItem>
+					{ fontWeight.length !== 0 && (
+						<ToolsPanelItem
+							hasValue={ () => fontWeight.length !== 0 }
+							label={ __( 'Font weight', 'wp-quote-blocks' ) }
+						>
+							<PanelBody title={ '' }>
+								{ fontWeightSelector }
+							</PanelBody>
+						</ToolsPanelItem>
+					) }
 					<ToolsPanelItem
 						hasValue={ () => true }
-						label={ __( 'Font weight', 'wp-quote-blocks' ) }
+						label={ __( 'Letter spacing', 'wp-quote-blocks' ) }
 					>
 						<PanelBody title={ '' }>
-							{ fontWeightSelector }
+							<RangeControl
+								label={ __(
+									'Quote letter spacing',
+									'wp-quote-blocks'
+								) }
+								value={ parseInt(
+									attributes.quoteLetterSpacing
+								) }
+								onChange={ ( newLetterSpacing ) => {
+									setAttributes( {
+										quoteLetterSpacing: newLetterSpacing,
+									} );
+								} }
+								step="1"
+								min={ -3 }
+								max={ 10 }
+							/>
 						</PanelBody>
 					</ToolsPanelItem>
 				</ToolsPanel>
@@ -710,6 +753,7 @@ function EditContainer( props ) {
 							...quoteTextsStyle,
 							fontWeight,
 							fontSize: attributes.quoteFontSize,
+							letterSpacing: attributes.quoteLetterSpacing,
 						} }
 						value={ attributes.quote }
 						onChange={ ( quote ) => setAttributes( { quote } ) }

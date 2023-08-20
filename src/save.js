@@ -27,7 +27,7 @@ export default function save( props ) {
 
 	const iconSVG = svgElementFromString( attributes.icon );
 
-	leftIcon = (
+	leftIcon = attributes.showIcon && (
 		<div
 			className="quote-icon"
 			style={ {
@@ -64,18 +64,24 @@ export default function save( props ) {
 	);
 
 	if ( attributes.class.includes( 'closed' ) ) {
-		rightIcon = (
-			<div className="quote-icon quote-right-icon">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					viewBox="0 0 50 50"
-					{ ...useBlockProps.save( {
-						style: { ...iconStyles, transform: 'rotate(180deg)' },
-					} ) }
-					dangerouslySetInnerHTML={ { __html: iconSVG.innerHTML } }
-				/>
-			</div>
-		);
+		rightIcon = attributes.showIcon &&
+			attributes.class.includes( 'closed' ) && (
+				<div className="quote-icon quote-right-icon">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 50 50"
+						{ ...useBlockProps.save( {
+							style: {
+								...iconStyles,
+								transform: 'rotate(180deg)',
+							},
+						} ) }
+						dangerouslySetInnerHTML={ {
+							__html: iconSVG.innerHTML,
+						} }
+					/>
+				</div>
+			);
 	}
 
 	const blockStyles = {
@@ -138,6 +144,7 @@ export default function save( props ) {
 						...quoteTextsStyle,
 						fontWeight: fontWeight || 'inherit',
 						fontSize: attributes.quoteFontSize,
+						letterSpacing: attributes.quoteLetterSpacing,
 					} }
 					tagName="p"
 					className="quote"

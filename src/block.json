@@ -6,7 +6,7 @@
 	"title": "WP Quote Blocks",
 	"category": "widgets",
 	"icon": "format-quote",
-	"description": "Collection of a load of Quote styles.",
+	"description": "Create elegant Quote blocks at ease.",
 	"attributes": {
 		"align": {
 			"type": "string",
@@ -60,6 +60,10 @@
 			"type": "string",
 			"default": ""
 		},
+		"quoteLetterSpacing": {
+			"type": "integer",
+			"default": 0
+		},
 		"boxShadow": {
 			"type": "integer",
 			"default": 0
@@ -89,6 +93,10 @@
 				"right": "0",
 				"bottom": "0"
 			}
+		},
+		"showIcon": {
+			"type": "boolean",
+			"default": true
 		},
 		"showLines": {
 			"type": "boolean",
