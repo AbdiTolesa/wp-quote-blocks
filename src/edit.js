@@ -338,9 +338,12 @@ function EditContainer( props ) {
 		loadFontCss( googleFonts, newFont );
 		getWeightsForFontFamily( googleFonts, newFont ).then( ( weights ) => {
 			updateFontWeightOptions( weights );
+			if ( isNaN( attributes.fontWeight ) ) {
+				return;
+			}
 			if ( ! weights.includes( parseInt( attributes.fontWeight ) ) ) {
 				if ( weights.length === 0 ) {
-					setAttributes( { fontWeight: '' } );
+					setAttributes( { fontWeight: 'normal' } );
 				} else if ( weights.includes( 300 ) ) {
 					setAttributes( { fontWeight: 300 } );
 				} else {

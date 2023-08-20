@@ -142,7 +142,7 @@ export default function save( props ) {
 				<RichText.Content
 					style={ {
 						...quoteTextsStyle,
-						fontWeight: fontWeight || 'inherit',
+						fontWeight,
 						fontSize: attributes.quoteFontSize,
 						letterSpacing: attributes.quoteLetterSpacing,
 					} }

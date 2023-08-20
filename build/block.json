@@ -58,7 +58,7 @@
     },
     "fontWeight": {
       "type": "string",
-      "default": ""
+      "default": "normal"
     },
     "quoteLetterSpacing": {
       "type": "integer",

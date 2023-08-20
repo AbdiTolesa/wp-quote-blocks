@@ -645,10 +645,13 @@ function EditContainer(props) {
     loadFontCss(googleFonts, newFont);
     getWeightsForFontFamily(googleFonts, newFont).then(weights => {
       updateFontWeightOptions(weights);
+      if (isNaN(attributes.fontWeight)) {
+        return;
+      }
       if (!weights.includes(parseInt(attributes.fontWeight))) {
         if (weights.length === 0) {
           setAttributes({
-            fontWeight: ''
+            fontWeight: 'normal'
           });
         } else if (weights.includes(300)) {
           setAttributes({
@@ -1108,7 +1111,7 @@ function save(props) {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText.Content, {
     style: {
       ...quoteTextsStyle,
-      fontWeight: fontWeight || 'inherit',
+      fontWeight,
       fontSize: attributes.quoteFontSize,
       letterSpacing: attributes.quoteLetterSpacing
     },
@@ -1260,7 +1263,7 @@ module.exports = window["wp"]["i18n"];
   \************************/
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/wp-quote-blocks","version":"0.1.0","title":"WP Quote Blocks","category":"widgets","icon":"format-quote","description":"Create elegant Quote blocks at ease.","attributes":{"align":{"type":"string","default":"left"},"class":{"type":"string","default":""},"quote":{"type":"string","default":""},"citation":{"type":"string","default":""},"iconSize":{"type":"string","default":"30px"},"iconColor":{"type":"string","default":"#000000"},"backgroundColor":{"type":"string","default":"#ffffff"},"icon":{"type":"string","default":"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 50 50\\"><path d=\\"M10.3 24.8V26H20v16.9H0V26.2C0 13.4 6.6 7.1 19.9 7.1v7.1c-3.4.5-5.9 1.6-7.4 3.3-1.5 1.7-2.2 4.1-2.2 7.3zm30 0V26H50v16.9H30.1V26.2c0-12.7 6.6-19.1 19.9-19.1v7.1c-6.4.7-9.7 4.3-9.7 10.6z\\"></path></svg>"},"alignment":{"type":"string","default":""},"quoteFontSize":{"type":"integer","default":"16"},"citationFontSize":{"type":"integer","default":"12"},"fontFamily":{"type":"string","default":""},"fontWeight":{"type":"string","default":""},"quoteLetterSpacing":{"type":"integer","default":0},"boxShadow":{"type":"integer","default":0},"borderRadius":{"type":"integer","default":0},"iconShadow":{"type":"integer","default":0},"iconMargin":{"type":"object","default":{"top":"0","left":"0","right":"0","bottom":"0"}},"iconPadding":{"type":"object","default":{"top":"0","left":"0","right":"0","bottom":"0"}},"showIcon":{"type":"boolean","default":true},"showLines":{"type":"boolean","default":false},"linesColor":{"type":"string","default":"#ABABAB"},"margin":{"type":"object","default":{"top":"0","left":"0","right":"0","bottom":"0"}},"padding":{"type":"object","default":{"top":"0","left":"0","right":"0","bottom":"0"}}},"supports":{"html":false,"align":["wide","full"],"typography":{"lineHeight":true}},"textdomain":"wp-quote-blocks","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css"}');
+module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/wp-quote-blocks","version":"0.1.0","title":"WP Quote Blocks","category":"widgets","icon":"format-quote","description":"Create elegant Quote blocks at ease.","attributes":{"align":{"type":"string","default":"left"},"class":{"type":"string","default":""},"quote":{"type":"string","default":""},"citation":{"type":"string","default":""},"iconSize":{"type":"string","default":"30px"},"iconColor":{"type":"string","default":"#000000"},"backgroundColor":{"type":"string","default":"#ffffff"},"icon":{"type":"string","default":"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 50 50\\"><path d=\\"M10.3 24.8V26H20v16.9H0V26.2C0 13.4 6.6 7.1 19.9 7.1v7.1c-3.4.5-5.9 1.6-7.4 3.3-1.5 1.7-2.2 4.1-2.2 7.3zm30 0V26H50v16.9H30.1V26.2c0-12.7 6.6-19.1 19.9-19.1v7.1c-6.4.7-9.7 4.3-9.7 10.6z\\"></path></svg>"},"alignment":{"type":"string","default":""},"quoteFontSize":{"type":"integer","default":"16"},"citationFontSize":{"type":"integer","default":"12"},"fontFamily":{"type":"string","default":""},"fontWeight":{"type":"string","default":"normal"},"quoteLetterSpacing":{"type":"integer","default":0},"boxShadow":{"type":"integer","default":0},"borderRadius":{"type":"integer","default":0},"iconShadow":{"type":"integer","default":0},"iconMargin":{"type":"object","default":{"top":"0","left":"0","right":"0","bottom":"0"}},"iconPadding":{"type":"object","default":{"top":"0","left":"0","right":"0","bottom":"0"}},"showIcon":{"type":"boolean","default":true},"showLines":{"type":"boolean","default":false},"linesColor":{"type":"string","default":"#ABABAB"},"margin":{"type":"object","default":{"top":"0","left":"0","right":"0","bottom":"0"}},"padding":{"type":"object","default":{"top":"0","left":"0","right":"0","bottom":"0"}}},"supports":{"html":false,"align":["wide","full"],"typography":{"lineHeight":true}},"textdomain":"wp-quote-blocks","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css"}');
 
 /***/ })
 
