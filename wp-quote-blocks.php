@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       Wp Quote Blocks
- * Description:       Example block scaffolded with Create Block tool.
+ * Description:       A plugin that allows you create elegant Quote blocks at ease.
  * Requires at least: 6.1
  * Requires PHP:      7.0
  * Version:           0.1.0
@@ -10,7 +10,7 @@
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       wp-quote-blocks
  *
- * @package           create-block
+ * @package           wp-quote-blocks
  */
 
 function create_block_wp_quote_blocks_block_init() {
