@@ -889,8 +889,8 @@ function EditContainer(props) {
     })
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.PanelBody, {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Font family', 'wp-quote-blocks')
-  }, fontFamilySelector)), fontWeight.length !== 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.__experimentalToolsPanelItem, {
-    hasValue: () => fontWeight.length !== 0,
+  }, fontFamilySelector)), fontWeights.length !== 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.__experimentalToolsPanelItem, {
+    hasValue: () => fontWeights.length !== 0,
     label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Font weight', 'wp-quote-blocks')
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.PanelBody, {
     title: ''

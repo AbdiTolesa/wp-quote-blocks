@@ -678,9 +678,9 @@ function EditContainer( props ) {
 							{ fontFamilySelector }
 						</PanelBody>
 					</ToolsPanelItem>
-					{ fontWeight.length !== 0 && (
+					{ fontWeights.length !== 0 && (
 						<ToolsPanelItem
-							hasValue={ () => fontWeight.length !== 0 }
+							hasValue={ () => fontWeights.length !== 0 }
 							label={ __( 'Font weight', 'wp-quote-blocks' ) }
 						>
 							<PanelBody title={ '' }>
