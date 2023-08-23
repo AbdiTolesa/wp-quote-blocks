@@ -2,15 +2,11 @@ import { useBlockProps, RichText } from '@wordpress/block-editor';
 
 export default function save( props ) {
 	const { attributes } = props;
-	let leftIcon = null,
-		rightIcon = null;
-	const { iconSize, iconColor, backgroundColor, boxShadow, fontWeight } =
-		attributes;
 
 	const iconStyles = {
-		width: iconSize,
-		height: iconSize,
-		fill: iconColor,
+		width: attributes.iconSize,
+		height: attributes.iconSize,
+		fill: attributes.iconColor,
 	};
 
 	const svgElementFromString = ( str ) => {
@@ -25,9 +21,14 @@ export default function save( props ) {
 		return svg;
 	};
 
-	const iconSVG = svgElementFromString( attributes.icon );
+	let iconSVG = null;
+	try {
+		iconSVG = svgElementFromString( attributes.icon );
+	} catch ( error ) {
+		console.error( error );
+	}
 
-	leftIcon = attributes.showIcon && (
+	const firstQuotationMark = attributes.showIcon && (
 		<div
 			className="quote-icon"
 			style={ {
@@ -63,8 +64,9 @@ export default function save( props ) {
 		</div>
 	);
 
+	let secondQuotationMark = null;
 	if ( attributes.class.includes( 'closed' ) ) {
-		rightIcon = attributes.showIcon &&
+		secondQuotationMark = attributes.showIcon &&
 			attributes.class.includes( 'closed' ) && (
 				<div className="quote-icon quote-right-icon">
 					<svg
@@ -85,15 +87,15 @@ export default function save( props ) {
 	}
 
 	const blockStyles = {
-		backgroundColor,
+		backgroundColor: attributes.backgroundColor,
 		boxShadow:
-			Math.max( boxShadow - 10, 0 ) +
+			Math.max( attributes.boxShadow - 10, 0 ) +
 			'px ' +
-			Math.max( boxShadow - 5, 0 ) +
+			Math.max( attributes.boxShadow - 5, 0 ) +
 			'px ' +
-			boxShadow +
+			attributes.boxShadow +
 			'px ' +
-			Math.max( boxShadow - 7, 0 ) +
+			Math.max( attributes.boxShadow - 7, 0 ) +
 			'px ' +
 			'rgba(0,0,0,0.2)',
 		borderRadius: attributes.borderRadius + '%',
@@ -126,7 +128,9 @@ export default function save( props ) {
 	};
 
 	const horizontalBar = attributes.showLines && (
-		<div style={ { borderBottom: 'solid' + attributes.linesColor } }></div>
+		<div
+			style={ { borderBottom: `solid ${ attributes.linesColor }` } }
+		></div>
 	);
 
 	return (
@@ -137,12 +141,12 @@ export default function save( props ) {
 			} ) }
 		>
 			{ horizontalBar }
-			{ leftIcon }
+			{ firstQuotationMark }
 			<div className="quote-wrapper" style={ quoteWrapperStyles }>
 				<RichText.Content
 					style={ {
 						...quoteTextsStyle,
-						fontWeight,
+						fontWeight: attributes.fontWeight,
 						fontSize: attributes.quoteFontSize,
 						letterSpacing: attributes.quoteLetterSpacing,
 					} }
@@ -160,7 +164,7 @@ export default function save( props ) {
 					value={ attributes.citation }
 				/>
 			</div>
-			{ rightIcon }
+			{ secondQuotationMark }
 			{ horizontalBar }
 		</div>
 	);

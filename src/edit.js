@@ -425,7 +425,7 @@ function EditContainer( props ) {
 
 	const iconSVG = svgElementFromString( attributes.icon );
 
-	const leftIcon = attributes.showIcon && (
+	const firstQuotationMark = attributes.showIcon && (
 		<div
 			className="quote-icon"
 			style={ {
@@ -461,7 +461,7 @@ function EditContainer( props ) {
 		</div>
 	);
 
-	const rightIcon = attributes.showIcon &&
+	const secondQuotationMark = attributes.showIcon &&
 		attributes.class.includes( 'closed' ) && (
 			<div className="quote-icon quote-right-icon">
 				<svg
@@ -747,7 +747,7 @@ function EditContainer( props ) {
 					</Toolbar>
 				</BlockControls>
 				{ horizontalBar }
-				{ leftIcon }
+				{ firstQuotationMark }
 				<div className="quote-wrapper" style={ quoteWrapperStyles }>
 					<RichText
 						tagName="p"
@@ -777,7 +777,7 @@ function EditContainer( props ) {
 						textAlign="center"
 					/>
 				</div>
-				{ rightIcon }
+				{ secondQuotationMark }
 				{ horizontalBar }
 			</div>
 		</>

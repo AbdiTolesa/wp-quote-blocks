@@ -712,7 +712,7 @@ function EditContainer(props) {
     }
   });
   const iconSVG = svgElementFromString(attributes.icon);
-  const leftIcon = attributes.showIcon && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  const firstQuotationMark = attributes.showIcon && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "quote-icon",
     style: {
       filter: attributes.iconShadow ? `drop-shadow(10px 5px ${attributes.iconShadow}px rgba(0, 0, 0, 0.3))` : 'none',
@@ -727,7 +727,7 @@ function EditContainer(props) {
       __html: iconSVG.innerHTML
     }
   }));
-  const rightIcon = attributes.showIcon && attributes.class.includes('closed') && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  const secondQuotationMark = attributes.showIcon && attributes.class.includes('closed') && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "quote-icon quote-right-icon"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("svg", {
     xmlns: "http://www.w3.org/2000/svg",
@@ -933,7 +933,7 @@ function EditContainer(props) {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("path", {
     d: "M9 6h7v10H9V6zm2 2v6h3V8h-3zM0 14h7v2H0v-2zm0-8h7v2H0V6zm0 4h7v2H0v-2zM0 0h16v4H0V0z",
     fillRule: "evenodd"
-  }))))), horizontalBar, leftIcon, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }))))), horizontalBar, firstQuotationMark, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "quote-wrapper",
     style: quoteWrapperStyles
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.RichText, {
@@ -963,7 +963,7 @@ function EditContainer(props) {
     }),
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Add citation…', 'wp-quote-blocks'),
     textAlign: "center"
-  })), rightIcon, horizontalBar));
+  })), secondQuotationMark, horizontalBar));
 }
 
 /***/ }),
@@ -1026,19 +1026,10 @@ function save(props) {
   const {
     attributes
   } = props;
-  let leftIcon = null,
-    rightIcon = null;
-  const {
-    iconSize,
-    iconColor,
-    backgroundColor,
-    boxShadow,
-    fontWeight
-  } = attributes;
   const iconStyles = {
-    width: iconSize,
-    height: iconSize,
-    fill: iconColor
+    width: attributes.iconSize,
+    height: attributes.iconSize,
+    fill: attributes.iconColor
   };
   const svgElementFromString = str => {
     const div = document.createElement('DIV');
@@ -1049,8 +1040,13 @@ function save(props) {
     }
     return svg;
   };
-  const iconSVG = svgElementFromString(attributes.icon);
-  leftIcon = attributes.showIcon && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  let iconSVG = null;
+  try {
+    iconSVG = svgElementFromString(attributes.icon);
+  } catch (error) {
+    console.error(error);
+  }
+  const firstQuotationMark = attributes.showIcon && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "quote-icon",
     style: {
       filter: attributes.iconShadow ? `drop-shadow(10px 5px ${attributes.iconShadow}px rgba(0, 0, 0, 0.3))` : 'none',
@@ -1065,8 +1061,9 @@ function save(props) {
       __html: iconSVG.innerHTML
     }
   }));
+  let secondQuotationMark = null;
   if (attributes.class.includes('closed')) {
-    rightIcon = attributes.showIcon && attributes.class.includes('closed') && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    secondQuotationMark = attributes.showIcon && attributes.class.includes('closed') && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "quote-icon quote-right-icon"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("svg", {
       xmlns: "http://www.w3.org/2000/svg",
@@ -1083,8 +1080,8 @@ function save(props) {
     }));
   }
   const blockStyles = {
-    backgroundColor,
-    boxShadow: Math.max(boxShadow - 10, 0) + 'px ' + Math.max(boxShadow - 5, 0) + 'px ' + boxShadow + 'px ' + Math.max(boxShadow - 7, 0) + 'px ' + 'rgba(0,0,0,0.2)',
+    backgroundColor: attributes.backgroundColor,
+    boxShadow: Math.max(attributes.boxShadow - 10, 0) + 'px ' + Math.max(attributes.boxShadow - 5, 0) + 'px ' + attributes.boxShadow + 'px ' + Math.max(attributes.boxShadow - 7, 0) + 'px ' + 'rgba(0,0,0,0.2)',
     borderRadius: attributes.borderRadius + '%'
   };
   const quoteTextsStyle = {
@@ -1097,7 +1094,7 @@ function save(props) {
   };
   const horizontalBar = attributes.showLines && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
-      borderBottom: 'solid' + attributes.linesColor
+      borderBottom: `solid ${attributes.linesColor}`
     }
   });
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -1105,13 +1102,13 @@ function save(props) {
       style: blockStyles,
       className: `wp-quote-blocks quote-variation-${attributes.class}`
     })
-  }, horizontalBar, leftIcon, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, horizontalBar, firstQuotationMark, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "quote-wrapper",
     style: quoteWrapperStyles
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText.Content, {
     style: {
       ...quoteTextsStyle,
-      fontWeight,
+      fontWeight: attributes.fontWeight,
       fontSize: attributes.quoteFontSize,
       letterSpacing: attributes.quoteLetterSpacing
     },
@@ -1126,7 +1123,7 @@ function save(props) {
     tagName: "p",
     className: "citation",
     value: attributes.citation
-  })), rightIcon, horizontalBar);
+  })), secondQuotationMark, horizontalBar);
 }
 
 /***/ }),

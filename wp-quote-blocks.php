@@ -26,13 +26,17 @@ function wp_quote_blocks_custom_script() {
 	}
 	$blocks = parse_blocks( $post->post_content );
 	$blocks = wp_list_filter( $blocks, array( 'blockName' => 'create-block/wp-quote-blocks' ) );
-	foreach ( $blocks as $block ) {?>
+	foreach ( $blocks as $block ) {
+		$font_family = $block['attrs']['fontFamily'];
+		$font_weight = $block['attrs']['fontWeight'];
+		$font_weight = ! empty( $font_weight ) ? $font_weight : '';
+		?>
 		<script type="text/javascript">
 			document.addEventListener("DOMContentLoaded", () => {
-				if ( "" !== "<?php echo ! empty( $block['attrs']['fontFamily'] ) ? $block['attrs']['fontFamily'] : ''; ?>" ) {
-					let url = `https://fonts.googleapis.com/css?family=<?php echo $block['attrs']['fontFamily']; ?>`;
-					if ( "" !== "<?php echo ! empty( $block['attrs']['fontWeight'] ) ? $block['attrs']['fontWeight'] : ''; ?>" ) {
-						url += ":<?php echo ! empty( $block['attrs']['fontWeight'] ) ? $block['attrs']['fontWeight'] : ''; ?>";
+				if ( "" !== "<?php echo ! empty( $font_family ) ? $font_family : ''; // phpcs:ignore WordPress.Security.EscapeOutput ?>" ) {
+					let url = `https://fonts.googleapis.com/css?family=<?php echo $block['attrs']['fontFamily']; // phpcs:ignore WordPress.Security.EscapeOutput ?>`;
+					if ( "" !== "<?php echo $font_weight; // phpcs:ignore WordPress.Security.EscapeOutput ?> " ) {
+						url += ":<?php echo $font_weight; // phpcs:ignore WordPress.Security.EscapeOutput ?>";
 					}
 					url += '&display=swap';
 
@@ -58,8 +62,7 @@ function wpqb_admin_menus() {
 		'manage_options',
 		'/wp-quote-blocks-settings.php',
 		'wpqb_page_html_form',
-		'',
-		6
+		''
 	);
 }
 

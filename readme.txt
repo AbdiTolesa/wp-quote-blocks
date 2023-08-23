@@ -33,7 +33,8 @@ Unleash your creativity with over 20+ finely-tuned settings per block, allowing 
 3. Style-3
 4. Style-4
 5. Style-5
-6. Edit page (1)
+6. Block toolbar options
 7. Edit page (2)
 8. Edit page (3)
 9. Edit page (4)
+10. Different styles in one page

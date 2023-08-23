@@ -33,6 +33,7 @@
 		}
 	},
 	"rules": {
+		"no-console": "off",
 		"camelcase": ["error", { "properties": "never" }],
 		"lines-around-comment": "off",
 		"react/display-name": "off",
