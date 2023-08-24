@@ -207,6 +207,14 @@ function EditContainer( props ) {
 		setAttributes( { linesColor: newColor } );
 	};
 
+	const onChangeQuoteFontColor = ( newColor ) => {
+		setAttributes( { quoteFontColor: newColor } );
+	};
+
+	const onChangeCitationFontColor = ( newColor ) => {
+		setAttributes( { citationFontColor: newColor } );
+	};
+
 	const onChangeAlignment = ( newAlignment ) => {
 		setAttributes( {
 			alignment: newAlignment === undefined ? 'none' : newAlignment,
@@ -246,6 +254,16 @@ function EditContainer( props ) {
 			value: attributes.linesColor,
 			onChange: onChangeLinesColor,
 			label: __( 'Lines color', 'wp-quote-blocks' ),
+		},
+		{
+			value: attributes.quoteFontColor,
+			onChange: onChangeQuoteFontColor,
+			label: __( 'Quote font color', 'wp-quote-blocks' ),
+		},
+		{
+			value: attributes.citationFontColor,
+			onChange: onChangeCitationFontColor,
+			label: __( 'Citation font color', 'wp-quote-blocks' ),
 		},
 	];
 
@@ -754,6 +772,7 @@ function EditContainer( props ) {
 						className="quote"
 						style={ {
 							...quoteTextsStyle,
+							color: attributes.quoteFontColor,
 							fontWeight,
 							fontSize: attributes.quoteFontSize,
 							letterSpacing: attributes.quoteLetterSpacing,
@@ -767,6 +786,7 @@ function EditContainer( props ) {
 						className="citation"
 						style={ {
 							...quoteTextsStyle,
+							color: attributes.citationFontColor,
 							fontSize: attributes.citationFontSize,
 						} }
 						value={ attributes.citation }

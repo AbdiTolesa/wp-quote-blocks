@@ -146,6 +146,7 @@ export default function save( props ) {
 				<RichText.Content
 					style={ {
 						...quoteTextsStyle,
+						color: attributes.quoteFontColor,
 						fontWeight: attributes.fontWeight,
 						fontSize: attributes.quoteFontSize,
 						letterSpacing: attributes.quoteLetterSpacing,
@@ -157,6 +158,7 @@ export default function save( props ) {
 				<RichText.Content
 					style={ {
 						...quoteTextsStyle,
+						color: attributes.citationFontColor,
 						fontSize: attributes.citationFontSize,
 					} }
 					tagName="p"
