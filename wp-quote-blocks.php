@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       Wp Quote Blocks
+ * Plugin Name:       WP Quote Blocks
  * Description:       A plugin that allows you create elegant Quote blocks at ease.
  * Requires at least: 6.1
  * Requires PHP:      7.0
@@ -30,20 +30,15 @@ function wp_quote_blocks_custom_script() {
 		$font_family = $block['attrs']['fontFamily'];
 		$font_weight = $block['attrs']['fontWeight'];
 		$font_weight = ! empty( $font_weight ) ? $font_weight : '';
+		if ( ! $font_family ) {
+			continue;
+		}
+		$url = "https://fonts.googleapis.com/css?family={$font_family}";
+		if ( $font_weight ) {
+			$url .= ":{$font_weight}";
+		}
+		wp_enqueue_style( 'wpqb-fonts', $url, array(), '0.1.0' );
 		?>
-		<script type="text/javascript">
-			document.addEventListener("DOMContentLoaded", () => {
-				if ( "" !== "<?php echo ! empty( $font_family ) ? $font_family : ''; // phpcs:ignore WordPress.Security.EscapeOutput ?>" ) {
-					let url = `https://fonts.googleapis.com/css?family=<?php echo $block['attrs']['fontFamily']; // phpcs:ignore WordPress.Security.EscapeOutput ?>`;
-					if ( "" !== "<?php echo $font_weight; // phpcs:ignore WordPress.Security.EscapeOutput ?> " ) {
-						url += ":<?php echo $font_weight; // phpcs:ignore WordPress.Security.EscapeOutput ?>";
-					}
-					url += '&display=swap';
-
-					document.body.insertAdjacentHTML( 'beforebegin', `<link rel='stylesheet' id='google-fonts-css'  href='${url}' type='text/css' media='all' />`);
-				}
-			});
-		</script>
 		<?php
 	}
 }
@@ -96,7 +91,7 @@ function wpqb_get_google_api_key() {
 	wp_send_json_success( get_option( 'google_api_key' ) );
 }
 
-function enqueue_block_assets() {
+function wpqb_enqueue_block_assets() {
 	wp_enqueue_script(
 		'wpqb-script',
 		plugins_url( 'edit.js', __FILE__ ),
@@ -113,4 +108,4 @@ function enqueue_block_assets() {
 	);
 }
 
-add_action( 'enqueue_block_editor_assets', 'enqueue_block_assets' );
+add_action( 'enqueue_block_editor_assets', 'wpqb_enqueue_block_assets' );

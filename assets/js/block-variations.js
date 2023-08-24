@@ -5,7 +5,7 @@ wp.blocks.registerBlockVariation( 'create-block/wp-quote-blocks', {
 	title: 'Default',
 	attributes: {
 		align: 'full',
-  }
+    }
 });
 
 wp.blocks.registerBlockVariation( 'create-block/wp-quote-blocks', {
@@ -13,7 +13,7 @@ wp.blocks.registerBlockVariation( 'create-block/wp-quote-blocks', {
 	title: 'Style 1',
 	attributes: {
 		align: 'half',
-  }
+    }
 });
 
 console.log( 'REG' );
