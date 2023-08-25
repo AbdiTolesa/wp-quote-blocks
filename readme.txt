@@ -24,7 +24,8 @@ Unleash your creativity with over 20+ finely-tuned settings per block, allowing 
 == Installation ==
 
 1. Upload the plugin files to the `/wp-content/plugins/wp-quote-blocks` directory, or install the plugin through the WordPress plugins screen directly.
-1. Activate the plugin through the 'Plugins' screen in WordPress
+2. Activate the plugin through the 'Plugins' screen in WordPress
+3. Go to "WP Quote Blocks Settings" menu from WP Dashboard and enter your Google API Key for using google fronts.
 
 == Screenshots ==
 
