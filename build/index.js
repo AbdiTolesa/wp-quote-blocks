@@ -428,7 +428,6 @@ function EditContainer(props) {
     }).done(function (response) {
       apiKey = response;
     });
-    console.log(apiKey);
     return apiKey;
   };
   const fetchSystemFonts = async () => {

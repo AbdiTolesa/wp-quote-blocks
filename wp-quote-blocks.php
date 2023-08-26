@@ -28,16 +28,16 @@ function wp_quote_blocks_custom_script() {
 	$blocks = wp_list_filter( $blocks, array( 'blockName' => 'create-block/wp-quote-blocks' ) );
 	foreach ( $blocks as $block ) {
 		$font_family = $block['attrs']['fontFamily'];
-		$font_weight = $block['attrs']['fontWeight'];
-		$font_weight = ! empty( $font_weight ) ? $font_weight : '';
 		if ( ! $font_family ) {
 			continue;
 		}
+		$font_weight = ! empty( $block['attrs']['fontWeight'] ) ? $block['attrs']['fontWeight'] : '';
 		$url = "https://fonts.googleapis.com/css?family={$font_family}";
 		if ( $font_weight ) {
 			$url .= ":{$font_weight}";
 		}
-		wp_enqueue_style( 'wpqb-fonts', $url, array(), '0.1.0' );
+
+		wp_enqueue_style( 'wpqb-fonts-' . str_replace( ' ', '-', $font_family ), $url, array(), '0.1.0' );
 		?>
 		<?php
 	}
