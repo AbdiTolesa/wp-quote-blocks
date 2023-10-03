@@ -693,7 +693,7 @@ function EditContainer(props) {
     fontFamily: `"${attributes.fontFamily}", Sans-serif`
   };
   const getFonts = type => {
-    return fontOptions[type];
+    return fontOptions[type] || [];
   };
   const fontWeightSelector = () => {
     return fontWeights.length !== 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.SelectControl, {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       WP Quote Blocks
+ * Plugin Name:       Quote Blocks
  * Description:       A plugin that allows you create elegant Quote blocks at ease.
  * Requires at least: 6.1
  * Requires PHP:      7.0
@@ -10,7 +10,7 @@
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       wp-quote-blocks
  *
- * @package           wp-quote-blocks
+ * @package           quote-blocks
  */
 
 function create_block_wp_quote_blocks_block_init() {
@@ -52,10 +52,10 @@ add_action( 'admin_init', 'wpqb_register_settings' );
 
 function wpqb_admin_menus() {
 	add_menu_page(
-		__( 'WP Quote Blocks settings', 'wp-quote-blocks' ),
-		__( 'WP Quote Blocks settings', 'wp-quote-blocks' ),
+		__( 'Quote Blocks settings', 'wp-quote-blocks' ),
+		__( 'Quote Blocks settings', 'wp-quote-blocks' ),
 		'manage_options',
-		'/wp-quote-blocks-settings.php',
+		'/quote-blocks-settings.php',
 		'wpqb_page_html_form',
 		''
 	);
@@ -66,7 +66,7 @@ add_action( 'admin_menu', 'wpqb_admin_menus' );
 function wpqb_page_html_form() {
 	?>
 	<div class="wrap">
-		<h2>WP Quote Blocks Settings</h2>
+		<h2><?php echo esc_html( 'Quote Blocks Settings', 'wp-quote-blocks' ); ?></h2>
 		<form method="post" action="options.php">
 			<?php settings_fields( 'wpqb_plugin_options_group' ); ?>
 		<table class="form-table">
