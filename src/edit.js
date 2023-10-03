@@ -392,7 +392,7 @@ function EditContainer( props ) {
 	};
 
 	const getFonts = ( type ) => {
-		return fontOptions[ type ];
+		return fontOptions[ type ] || [];
 	};
 
 	const fontWeightSelector = () => {
