@@ -87,7 +87,7 @@ function qblks_page_html_form() {
 add_action( 'wp_ajax_get_google_api_key', 'qblks_get_google_api_key' );
 
 function qblks_get_google_api_key() {
-	if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'wpqb_nonce' ) ) {
+	if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'qblk_nonce' ) ) {
 		die( 'Unauthorized!' );
 	}
 	wp_send_json_success( get_option( 'google_api_key' ) );
@@ -105,7 +105,7 @@ function qblks_enqueue_block_assets() {
 		'wpqb-script',
 		'wpqbVars',
 		array(
-			'nonce' => wp_create_nonce( 'wpqb_nonce' ),
+			'nonce' => wp_create_nonce( 'qblk_nonce' ),
 		)
 	);
 }
