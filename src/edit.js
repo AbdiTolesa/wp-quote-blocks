@@ -82,7 +82,7 @@ function EditContainer( props ) {
 		await wp.ajax
 			.post( 'get_google_api_key', {
 				_wpnonce: wpqbVars.nonce,
-				action: 'wpqb_get_google_api_key',
+				action: 'qblks_get_google_api_key',
 			} )
 			.done( function ( response ) {
 				apiKey = response;

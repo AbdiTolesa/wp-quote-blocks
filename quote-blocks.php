@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Quote Blocks
  * Description:       A plugin that allows you create elegant Quote blocks at ease.
- * Requires at least: 6.1
+ * Requires at least: 6.4
  * Requires PHP:      7.0
  * Version:           0.1.0
  * Author:            The WordPress Contributors
@@ -13,13 +13,13 @@
  * @package           quote-blocks
  */
 
-function create_block_wp_quote_blocks_block_init() {
+function qblks_create_block_wp_quote_blocks_block_init() {
 	register_block_type( __DIR__ . '/build' );
 }
 
-add_action( 'init', 'create_block_wp_quote_blocks_block_init' );
+add_action( 'init', 'qblks_create_block_wp_quote_blocks_block_init' );
 
-function wp_quote_blocks_custom_script() {
+function qblks_custom_script() {
 	global $post;
 	if ( ! $post ) {
 		return;
@@ -42,28 +42,28 @@ function wp_quote_blocks_custom_script() {
 		<?php
 	}
 }
-add_action( 'wp_enqueue_scripts', 'wp_quote_blocks_custom_script' );
+add_action( 'wp_enqueue_scripts', 'qblks_custom_script' );
 
-function wpqb_register_settings() {
+function qblks_register_settings() {
 	register_setting( 'wpqb_plugin_options_group', 'google_api_key' );
 }
 
-add_action( 'admin_init', 'wpqb_register_settings' );
+add_action( 'admin_init', 'qblks_register_settings' );
 
-function wpqb_admin_menus() {
+function qblks_admin_menus() {
 	add_menu_page(
 		__( 'Quote Blocks settings', 'wp-quote-blocks' ),
 		__( 'Quote Blocks settings', 'wp-quote-blocks' ),
 		'manage_options',
 		'/quote-blocks-settings.php',
-		'wpqb_page_html_form',
+		'qblks_page_html_form',
 		''
 	);
 }
 
-add_action( 'admin_menu', 'wpqb_admin_menus' );
+add_action( 'admin_menu', 'qblks_admin_menus' );
 
-function wpqb_page_html_form() {
+function qblks_page_html_form() {
 	?>
 	<div class="wrap">
 		<h2><?php echo esc_html( 'Quote Blocks Settings', 'wp-quote-blocks' ); ?></h2>
@@ -82,16 +82,16 @@ function wpqb_page_html_form() {
 <?php } ?>
 
 <?php
-add_action( 'wp_ajax_get_google_api_key', 'wpqb_get_google_api_key' );
+add_action( 'wp_ajax_get_google_api_key', 'qblks_get_google_api_key' );
 
-function wpqb_get_google_api_key() {
+function qblks_get_google_api_key() {
 	if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'wpqb_nonce' ) ) {
 		die( 'Unauthorized!' );
 	}
 	wp_send_json_success( get_option( 'google_api_key' ) );
 }
 
-function wpqb_enqueue_block_assets() {
+function qblks_enqueue_block_assets() {
 	wp_enqueue_script(
 		'wpqb-script',
 		plugins_url( 'edit.js', __FILE__ ),
@@ -108,4 +108,4 @@ function wpqb_enqueue_block_assets() {
 	);
 }
 
-add_action( 'enqueue_block_editor_assets', 'wpqb_enqueue_block_assets' );
+add_action( 'enqueue_block_editor_assets', 'qblks_enqueue_block_assets' );

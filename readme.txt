@@ -1,7 +1,7 @@
 === Wp Quote Blocks ===
 Contributors:      [@abditsori](Abdi Tolessa)
 Tags:              block
-Tested up to:      6.1
+Tested up to:      6.4
 Stable tag:        0.1.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -13,6 +13,15 @@ This plugin allows you create a visually appealing Quote blocks and can be used 
 Elevate your content with our powerful and versatile WordPress plugin that revolutionizes the way you showcase quotes. The Ultimate Quote Blocks Plugin brings you a seamless experience in crafting stunning quote blocks, all within the intuitive Gutenberg editor.
 
 Unleash your creativity with over 20+ finely-tuned settings per block, allowing you to effortlessly customize the look, feel, and layout of your quotes. Tailor each quote block to match your website's style and captivate your audience's attention. Whether you're a blogger, content marketer, or business owner, our plugin is designed to enhance your content's visual impact.
+
+**Third Party Services**
+This plugin relies on Google Fonts API for allowing using those fonts in your block editor. When end users visit a website that embeds Google Fonts, their browsers send HTTP requests to the Google Fonts Web API. The Google Fonts Web API serves the Google Fonts Cascading Style Sheets (CSS) and subsequently the font files specified in the CSS to the users. Such HTTP requests include
+
+(1) The IP address used by the respective user to access the Internet
+(2) the requested URL on the Google server
+(3) HTTP headers including the user agent describing the website visitors’ Internet browser and operating system versions as well as the referer (i.e. the webpage on which the Google font is to be displayed).
+
+Terms of Service: https://developers.google.com/fonts/terms
 
 **Key Features:**
 
