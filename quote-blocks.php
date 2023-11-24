@@ -66,6 +66,7 @@ function qblks_admin_menus() {
 add_action( 'admin_menu', 'qblks_admin_menus' );
 
 function qblks_page_html_form() {
+	ob_start();
 	?>
 	<div class="wrap">
 		<h2><?php echo esc_html( 'Quote Blocks Settings', 'wp-quote-blocks' ); ?></h2>
@@ -81,9 +82,10 @@ function qblks_page_html_form() {
 		</table>
 		<?php submit_button(); ?>
 	</div>
-<?php } ?>
-
 <?php
+	echo ob_get_clean();
+}
+
 add_action( 'wp_ajax_get_google_api_key', 'qblks_get_google_api_key' );
 
 function qblks_get_google_api_key() {
