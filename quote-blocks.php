@@ -13,6 +13,8 @@
  * @package           quote-blocks
  */
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 function qblks_create_block_wp_quote_blocks_block_init() {
 	register_block_type( __DIR__ . '/build' );
 }
