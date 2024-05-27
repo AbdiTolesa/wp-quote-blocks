@@ -45,7 +45,7 @@
 			"default": ""
 		},
 		"quoteFontSize": {
-			"type": "integer",
+			"type": "string",
 			"default": "16"
 		},
 		"citationFontSize": {
