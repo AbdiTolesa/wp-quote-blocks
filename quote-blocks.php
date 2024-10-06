@@ -87,6 +87,7 @@ function qblks_page_html_form() {
 }
 
 add_action( 'wp_ajax_get_google_api_key', 'qblks_get_google_api_key' );
+add_action( 'wp_ajax_nopriv_get_google_api_key', 'qblks_get_google_api_key' );
 
 function qblks_get_google_api_key() {
 	if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'qblk_nonce' ) ) {
