@@ -3,7 +3,7 @@
 	"apiVersion": 3,
 	"name": "create-block/wp-quote-blocks",
 	"version": "0.1.0",
-	"title": "WP Quote Blocks",
+	"title": "Quote Blocks",
 	"category": "widgets",
 	"icon": "format-quote",
 	"description": "Create elegant Quote blocks at ease.",
