@@ -1,6 +1,6 @@
 === Wp Quote Blocks ===
 Contributors:      abditsori
-Tags:              block
+Tags:              quote, quote block, quotation, verse, highlight
 Tested up to:      6.9
 Stable tag:        0.1.0
 License:           GPL-2.0-or-later
